@@ -10,7 +10,7 @@
     />
 
     <div class="foodImg">
-      <img src="../../assets/images/shopImg.jpg" alt="" />
+      <!-- <img src="../../assets/images/shopImg.jpg" alt="" /> -->
     </div>
 
     <div class="foodName">

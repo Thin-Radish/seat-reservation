@@ -1,13 +1,18 @@
 <template>
-  <div>
+  <div class="index">
     <van-tabbar v-model="active" z-index=999>
-      <van-tabbar-item icon="fire-o" to="find">发现</van-tabbar-item>
-      <van-tabbar-item icon="like-o" to="collect">收藏</van-tabbar-item>
-      <van-tabbar-item icon="orders-o" to="indent">订单</van-tabbar-item>
-      <van-tabbar-item icon="manager-o" to="profile">我的</van-tabbar-item>
+      <van-tabbar-item icon="fire-o" to="find" name="/find">发现</van-tabbar-item>    
+      <van-tabbar-item icon="comment-o" to="message" name="/message">消息</van-tabbar-item>
+       <van-tabbar-item icon="orders-o" to="indent" name="/indent">订单</van-tabbar-item>
+      <van-tabbar-item icon="manager-o" to="profile" name="/profile">我的</van-tabbar-item>
     </van-tabbar>
 
-    <router-view />
+    <keep-alive exclude="Profile" >
+      <!-- 二级路由 -->
+      <router-view/>
+    </keep-alive>
+
+    
   </div>
 </template>
 
@@ -15,11 +20,21 @@
 export default {
   data() {
     return {
-      active: 0,
+      active: "/find",
     };
   },
+
+  watch:{
+    $route: function (to, from) {
+      this.active = this.$route.path;
+    },
+  }
+
 };
 </script>
 
 <style scoped>
+.index{
+  overflow: hidden;
+}
 </style>

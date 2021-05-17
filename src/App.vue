@@ -1,19 +1,24 @@
 <template>
   <div id="app">
-    <router-view/>
+    <keep-alive exclude="Shop,ModName,Seat,Comfirm,Interact">
+      <router-view />
+    </keep-alive>
   </div>
 </template>
 
+
+<script>
+export default {
+  watch: {
+    $route: function (to, from) {
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+    },
+  },
+};
+</script>
+
 <style>
-/* #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-} */
 
-  @import "~assets/css/base.css";
-
-
+@import "~assets/css/base.css";
 </style>
