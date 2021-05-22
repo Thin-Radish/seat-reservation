@@ -19,6 +19,7 @@ export default {
   methods: {
     decrease() {
       this.listItem.count--;
+      this.listItem.count = (this.listItem.count<=0)?0:0
     },
     add() {
       if (!this.listItem.count) {

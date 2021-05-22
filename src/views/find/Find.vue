@@ -1,5 +1,7 @@
 <template>
   <div class="find">
+
+    
     <van-search
       show-action
       label="店铺"
@@ -11,6 +13,10 @@
         <div>搜索</div>
       </template>
     </van-search>
+
+
+
+
     <scroll class="content" @scroll="navScroll" :probeType="3" ref="scroll">
       <van-swipe
         class="my-swipe"
@@ -314,6 +320,7 @@ export default {
   // mounted(){
   //   this.$refs.scroll.refresh();
   // }
+
 
 };
 </script>

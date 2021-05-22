@@ -1,10 +1,11 @@
 import axios from 'axios'
+axios.defaults.withCredentials = true; 
 
 export function request(config) {
 
   //1.创建axios实例
   const instance = axios.create({
-    baseURL: 'http://114.55.38.15:15001',
+    baseURL: '/api',
     timeout: 5000
   })
 

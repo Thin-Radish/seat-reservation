@@ -35,6 +35,7 @@
 
 <script>
 import { Toast } from 'vant';
+import debounce from 'common/utils/debounce'
   export default {
     props:{
       isRotate:{
@@ -55,9 +56,9 @@ import { Toast } from 'vant';
     },
     methods:{
       isClick(i){
+        
         //当座位可选时
         if(!this.state[i]){
-          
           let seatList = this.$store.state.seatList;
           //当座位没被选中时
           if(!this.isSelect[i]){

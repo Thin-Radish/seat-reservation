@@ -15,8 +15,8 @@ export function getSeatMap(shopId){
 export function setSeatMap(table){
   return request({
     method: 'post',
-    url: '/seat/insert',
-    params: table
+    url: '/seat/insertAll',
+    data: table
   })
 }
 

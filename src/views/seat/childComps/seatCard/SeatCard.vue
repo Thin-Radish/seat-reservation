@@ -1,16 +1,17 @@
 <template>
-  <div class="seat-card" v-if="isColse">
+  <div class="seat-card" >
     <div class="paly">
       {{ pos.d }}桌 <br />
       {{ pos.c }}坐
     </div>
-    <div class="close" @click="isClick">
+    <div class="close" @click="isClose">
       <img src="~assets/images/close.svg" alt="">
     </div>
   </div>
 </template>
 
 <script>
+import debounce from 'common/utils/debounce'
 export default {
   props: {
     pos: Object,
@@ -18,13 +19,14 @@ export default {
   },
   data() {
     return {
-      isColse: true,
     };
   },
   methods: {
-    isClick() {
-      let seatList = this.$store.state.seatList;
-      for(let i =0; i<seatList.length; i++){
+    isClose:debounce(function(){
+      console.log('das');
+        let seatList = this.$store.state.seatList;
+        console.log(123);
+        for(let i =0; i<seatList.length; i++){
         if(seatList[i].d === this.pos.d && seatList[i].c === this.pos.c){
 
           //发送取消的信号给tables组件
@@ -38,8 +40,7 @@ export default {
 
       this.$store.commit("commitSeatList",seatList);
       
-
-    },
+      },100)
   },
 };
 </script>

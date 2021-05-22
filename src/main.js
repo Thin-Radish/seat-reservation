@@ -23,7 +23,9 @@ import { Picker } from 'vant';
 import { Tab, Tabs } from 'vant';
 import { SwipeCell } from 'vant';
 import { Uploader } from 'vant';
+import { Toast } from 'vant';
 
+Vue.use(Toast);
 
 Vue.use(Uploader);
 
@@ -73,6 +75,7 @@ Vue.use(Field);
 
 Vue.use(Form);
 
+// require("./mock.js")
 
 
 import Directives  from './common/directives'

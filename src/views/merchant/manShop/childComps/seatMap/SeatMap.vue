@@ -80,7 +80,6 @@
         </div>   
       </div>
     </div>
-
     <!-- <div class="confirm" @click="toComfirm"></div> -->
   </div>
 </template>
@@ -150,38 +149,33 @@ export default {
     },
     addDouSeat(isRotate){
       let table={
-        x:9,y:9,w:2,h:3,i:this.layout.length,type:2,isRotate:isRotate,state:[0,0] 
+        x:9,y:9,w:2,h:3,i:this.layout.length,type:2,isRotate:isRotate,state:[0,0],shopId:11 
       }
       this.layout.push(table);
     },
     addFourSeat(isRotate){
       let table={
-        x:9,y:9,w:3,h:3,i:this.layout.length,type:4,isRotate:isRotate,state:[0,0,0,0]
+        x:9,y:9,w:3,h:3,i:this.layout.length,type:4,isRotate:isRotate,state:[0,0,0,0],shopId:11 
       }
       this.layout.push(table);
     },
     addSixSeat(isRotate){
       let table={
-        x:7,y:9,w:4,h:3,i:this.layout.length,type:6,isRotate:isRotate,state:[0,0,0,0,0,0]
+        x:7,y:9,w:4,h:3,i:this.layout.length,type:6,isRotate:isRotate,state:[0,0,0,0,0,0],shopId:11 
       }
       this.layout.push(table);
     },
     saveMap(){
-      let table ={
-        shopId:5,
-        x: 11, 
-        y: 11, 
-        w: 11, 
-        h: 11, 
-        i: "1", 
-        type: 6,
-        isRotate:false
-      }
+
+      let table = this.layout;
+
       setSeatMap(table).then(res=>{
         console.log(res);
       }).catch(err=>{
         console.log(err);
       })
+
+      // console.log(this.layout);
     }
 
 

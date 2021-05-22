@@ -22,7 +22,7 @@
       <div></div>
     </div>
     <!-- <input type="file" class="pos"> -->
-    <form action="" enctype=‘multipart/form-data’>
+    <!-- <form action="" enctype=‘multipart/form-data’>
       <input
       class="pos"
       name="file"
@@ -31,7 +31,7 @@
       @change="update"
       
     />
-    </form>
+    </form> -->
 
     <com-button top="400" label="确认添加" background="#1989fa" />
   </div>
