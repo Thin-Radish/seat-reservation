@@ -10,13 +10,3 @@ export function userLogin(info){
 }
 
 
-
-// axios({
-//   method: 'post',
-//   url: 'http://114.55.38.15:15001/user/login',
-//   params: {
-//     name: 'chenzhenliang',
-//     password: '123456789'
-//   }
-
-

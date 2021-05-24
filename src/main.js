@@ -75,7 +75,6 @@ Vue.use(Field);
 
 Vue.use(Form);
 
-// require("./mock.js")
 
 
 import Directives  from './common/directives'

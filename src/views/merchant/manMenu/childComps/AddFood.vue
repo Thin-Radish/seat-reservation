@@ -8,9 +8,11 @@
     </nav-bar>
 
     <div class="habits">
-      <van-field label="食品名称" v-model="foodName" />
-      <van-field label="食品描述" v-model="foodLabel" />
-      <van-field label="食品价格" v-model="foodPrice" />
+      <van-field label="月出售" v-model.number="dish.monSell" type="number"/>
+      <van-field label="菜品名称" v-model="dish.foodName" />
+      <van-field label="菜品描述" v-model="dish.foodLabel" />
+      <van-field label="菜品价格" v-model.number="dish.foodPrice" type="number" />
+      <van-field label="菜品分类" v-model="dish.foodType" />
       <div class="food-img">
         <div>菜品图片</div>
         <van-uploader
@@ -21,26 +23,16 @@
       </div>
       <div></div>
     </div>
-    <!-- <input type="file" class="pos"> -->
-    <!-- <form action="" enctype=‘multipart/form-data’>
-      <input
-      class="pos"
-      name="file"
-      type="file"
-      accept="image/png,image/gif,image/jpeg"
-      @change="update"
-      
-    />
-    </form> -->
 
-    <com-button top="400" label="确认添加" background="#1989fa" />
+    <com-button top="460" label="确认添加" background="#1989fa"   @click.native="commit()"/>
   </div>
 </template>
 
 <script>
 import NavBar from "components/common/navbar/NavBar";
 import ComButton from "components/common/button/ComButton";
-import axios from "axios";
+
+import { addFood } from "api/dish";
 export default {
   components: {
     NavBar,
@@ -48,10 +40,16 @@ export default {
   },
   data() {
     return {
-      foodName: "",
-      foodLabel: "",
-      foodPrice: "",
+      dish:{
+        shopId:1,
+        monSell:null,
+        foodName: "",
+        foodLabel: "",
+        foodPrice:null,  
+        foodType:"",
+      },
       fileList: [],
+      formData: new FormData(),
     };
   },
   methods: {
@@ -60,46 +58,27 @@ export default {
     },
 
     afterRead(file) {
-      var formData = new FormData();
-      formData.append("image", file.file);
-      axios({
-        method: 'post',
-        headers: { "Content-Type": "multipart/form-data"},
-        url: 'http://localhost:3000/test.do',
-        data:formData
-      }).then(res => {
-        console.log(res.data);
-      }).catch(err => {
+      // this.formData.append("dishImgFile", file.file);
+      
+    },
+    appendData(){
+      this.formData.append("shopId", this.dish.shopId); 
+      this.formData.append("monSell", this.dish.monSell); 
+      this.formData.append("name", this.dish.foodName);
+      this.formData.append("introduction", this.dish.foodLabel);
+      this.formData.append("price", this.dish.foodPrice);
+      this.formData.append("type", this.dish.foodType);
+    },
+    commit(){
+      this.appendData();
+      addFood(this.formData).then(res=>{
+        console.log(res);
+      }).catch(err=>{
         console.log(err);
       })
 
-
-      // let form = new FormData();
-      // form.append("username", "zxj");
-      // form.append("password", 123456);
-      // axios.post("http://localhost:3000/test.do", formData).then((res) => {
-      //   console.log(res);
-      // });
-    },
-    update(e) {
-      let file = e.target.files[0];
-      let param = new FormData(); // 创建form对象
-      param.append("files", file); // 通过append向form对象添加数据
-      // console.log(param.get("files"));
-      axios({
-        method: "post",
-        url: "http://localhost:3000/test.do",
-        headers: { "Content-Type": "multipart/form-data"},
-        data:param
-      })
-        .then((res) => {
-          console.log(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-          console.log("++++++++++++++");
-        });
-    },
+    }
+    
   },
 };
 </script>

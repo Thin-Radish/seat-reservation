@@ -9,6 +9,7 @@ export default new Vuex.Store({
     seatList:[],
     index:0,
     role:0,
+    sellerInfo:{},
   },
   mutations: {
     commitFoodList(state,paylod){
@@ -19,6 +20,9 @@ export default new Vuex.Store({
     },
     commitRole(state,paylod){
       state.role = paylod;
+    },
+    commitSellerInfo(state,paylod){
+      state.sellerInfo = paylod;
     },
   },
   actions: {

@@ -4,16 +4,25 @@
       <div slot="left" @click="goBack()">
         <img src="~assets/images/nav-bar/return-black.svg" alt="" />
       </div>
-      <div slot="center">增加菜品</div>
+      <div slot="center">资料编辑</div>
     </nav-bar>
 
     <div class="info">
       <van-field label="店铺名称" v-model="shopInfo.title" />
       <van-field label="店铺特色" v-model="shopInfo.label" />
-      <van-field label="店铺分类" v-model="shopInfo.classify" />
       <van-field label="店铺热线" v-model="shopInfo.phoneNum" />
       <van-field label="店铺地址" v-model="shopInfo.local" />
       <van-field label="营业时间" v-model="shopInfo.openTime" />
+      <van-field label="店铺分类" v-model="shopInfo.classify" @click="showPicker = true"/>
+      <van-popup v-model="showPicker" position="top">
+        <van-picker
+          title="店铺分类"
+          show-toolbar
+          :columns="columns"
+          @confirm="onConfirm"
+          @cancel="showPicker = false"
+        />
+      </van-popup>
       <div class="food-img">
         <div>店铺图片</div>
         <van-uploader
@@ -22,19 +31,12 @@
           :max-count="6"
         />
       </div>
-      <input type="file" name="files" id="file" multiple="multiple" />
-      <div @click="commitImg">提交</div>
-      <!-- <form action="http://114.55.38.15:15001/shop/uploadImage" enctype="multipart/form-data" method="post">
-        <input type="file" name="files" multiple='multipart'>
-        <input type="submit" value="提交">
-      </form> -->
-
       <div></div>
     </div>
 
     <com-button
       top="570"
-      label="确认添加"
+      label="确认上传"
       background="#1989fa"
       @click.native="commit()"
     />
@@ -44,8 +46,8 @@
 <script>
 import NavBar from "components/common/navbar/NavBar";
 import ComButton from "components/common/button/ComButton";
-import axios from "axios";
-import { uploadShopImg } from "api/shop";
+
+import { uploadShopImg, setShopInfo } from "api/shop";
 export default {
   components: {
     NavBar,
@@ -53,88 +55,60 @@ export default {
   },
   data() {
     return {
+      columns: ["海鲜", "火锅", "甜品饮料", "烧烤烤肉", "西餐", "香锅烤鱼", "小吃快餐", "自助餐"],
+      showPicker:false,
       shopInfo: {
-        shopId: 6,
+        // shopId: 20,
         title: "",
-        label: "",
-        classify: "",
-        phoneNum: "",
+        openTime: "9:30-14:30;16:30-21:30",
+        phoneNum: "18973835153",
         local: "",
-        openTime: "",
+        classify: "火锅",
+        label: "",
+        shopAvatar: null,
+        sampleGraph: null,
+        fileId: null,
       },
       fileList: [],
+      formData: new FormData(),
     };
   },
   methods: {
     goBack(path) {
       this.$router.go(-1);
     },
-    commitImg() {
-      var fromData = new FormData();
-
-      document.getElementById("file").onchange = () => {
-        for (var item of document.getElementById("file").files) {
-          fromData.append("file", item);
-        }
-      };
-
-      document.getElementById("shop-img").onclick = (e) => {
-        axios({
-          method: "post",
-          headers: { "Content-Type": "multipart/form-data" },
-          url: "http://localhost:15001/shop/uploadImages",
-          data: fromData,
-        })
-          .then((res) => {
-            console.log(res);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      };
+    onConfirm(value){
+      this.shopInfo.classify = value;
+      this.showPicker = false;
     },
 
     afterRead(file) {
-      console.log(file.file.name);
-      var formData = new FormData();
-      formData.append("image", file.file);
-      console.log(formData.get("image"));
-
-      // uploadShopImg(formData).then(res=>{
-      //   console.log(res);
-      // }).catch(err=>{
-      //   console.log(err);
-      // })
-      axios.defaults.withCredentials = true;
-      axios({
-        method: "post",
-        headers: { "Content-Type": "multipart/form-data" },
-        url: "http://114.55.38.15:15001/shop/uploadImage",
-        data: formData,
-      })
+      this.formData.append("image", file.file);
+    },
+    commit() {
+      uploadShopImg(this.formData)
         .then((res) => {
           console.log(res);
+          if (res.code === 200 && res.data.length != 0) {
+            this.shopInfo.shopAvatar = res.data[0];
+            this.shopInfo.sampleGraph = res.data[0];
+            let imgList = res.data.slice(1);
+            this.shopInfo.fileId = JSON.stringify(imgList);
+
+            setShopInfo(this.shopInfo)
+              .then((res) => {
+                console.log(res);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }
         })
         .catch((err) => {
           console.log(err);
         });
     },
-    commit() {
-      console.log(this.shopInfo);
-    },
   },
-  // mounted() {
-  //   axios({
-  //     method: "get",
-  //     url: "http://127.0.0.1:15001/getShopAll",
-  //   })
-  //     .then((res) => {
-  //       console.log(res);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // },
 };
 </script>
 

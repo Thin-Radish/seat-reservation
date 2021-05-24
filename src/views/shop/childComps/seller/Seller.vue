@@ -4,7 +4,7 @@
       <div class="addre-left">
         <img src="~assets/images/seller/address.png" alt="" />
       </div>
-      <div class="addre-text">湖南省湘潭市岳塘区湖南工程学院后街黄焖鸡</div>
+      <div class="addre-text">{{sellerInfo.local}}</div>
       <div class="addre-right">
         <img src="~assets/images/seller/phone.png" alt="" />
       </div>
@@ -14,7 +14,7 @@
         <li
           ref="picsItem"
           class="pics-item"
-          v-for="(imgurl, index) in swipeImg"
+          v-for="(imgurl, index) in sellerInfo.imageUrls"
           :key="index"
         >
           <img :src="imgurl" />
@@ -32,7 +32,7 @@
     </div>
     <div class="server-time">
       <img src="~assets/images/seller/time.png" alt="" />
-      营业时间:05:00-10:15,10:30-23:59
+      {{sellerInfo.openTime}}
     </div>
   </div>
 </template>
@@ -40,31 +40,44 @@
 <script>
 import BScroll from "better-scroll";
 import Split from "components/content/split/Split";
+
+import { getDetailById } from "api/shop";
 export default {
   components: {
     Split,
   },
   data() {
     return {
-      swipeImg: [
-        require("assets/images/seller/shop-img-1.jpg"),
-        require("assets/images/seller/shop-img-2.jpg"),
-        require("assets/images/seller/shop-img-3.jpg"),
-        require("assets/images/seller/shop-img-4.jpg"),
-      ],
+      sellerInfo:{},
     };
   },
-  created() {
-    this.$nextTick(() => {
-      let imgW = this.$refs.picsItem[0].clientWidth;
-      let marginR = 11;
-      let width = (imgW + marginR) * this.swipeImg.length;
-      this.$refs.picsList.style.width = width + "px";
-      this.scroll = new BScroll(this.$refs.picsView, {
-        scrollX: true,
-      });
+  methods:{
+    ImgListScroll(){
+      this.$nextTick(() => {
+        let imgW = this.$refs.picsItem[0].clientWidth;
+        let marginR = 11;
+        let width = (imgW + marginR) * this.sellerInfo.imageUrls.length;
+        this.$refs.picsList.style.width = width + "px";
+        this.scroll = new BScroll(this.$refs.picsView, {
+          scrollX: true,
+        });
     });
+    }
   },
+  created() {
+
+    let shopId = this.$route.query.id
+    getDetailById(shopId).then(res=>{
+      this.sellerInfo = res.data;
+
+      //因为图片动态加载，则scroll只能在dom渲染完之后才能获取content范围
+      this.ImgListScroll();
+
+    }).catch(err=>{
+      console.log(err);
+    })
+  },
+
 };
 </script>
 
@@ -97,6 +110,7 @@ export default {
   font-size: 15px;
   padding-top: 8px;
   font-family: serif;
+  line-height: 30px;
 }
 .addre-right {
   width: 40px;
@@ -132,14 +146,14 @@ export default {
 }
 
 .pics-wrapper {
-  padding: 10px 10px;
+  padding: 10px;
   overflow: hidden;
   border-bottom: 1px solid #f4f4f4;
   white-space: nowrap;
 }
 .pics-item {
   display: inline-block;
-  margin-right: 11px;
+  margin-left: 10px;
   width: 93px;
   height: 75px;
 }

@@ -81,18 +81,18 @@ const fs = require("fs");
  * 根据id获取店铺信息
  */
 
-axios({
-  method: 'get',
-  url: 'http://114.55.38.15:15001/shop/getShopById',
-  params: {
-    id:5
-  }
+// axios({
+//   method: 'get',
+//   url: 'http://114.55.38.15:15001/shop/getShopById',
+//   params: {
+//     id:5
+//   }
 
-}).then(res => {
-  console.log(res.data);
-}).catch(err => {
-  console.log(err);
-})
+// }).then(res => {
+//   console.log(res.data);
+// }).catch(err => {
+//   console.log(err);
+// })
 
 
 /**
@@ -121,61 +121,87 @@ axios({
  */
 
 
-// axios({
-//   method: 'post',
-//   url: 'http://114.55.38.15:15001/user/login',
-//   params: {
-//     name: 'chenzhenliang',
-//     password: '123456789'
-//   }
+axios({
+  method: 'post',
+  url: 'http://114.55.38.15:15001/user/login',
+  params: {
+    name: 'chenzhenliang',
+    password: '123456789'
+  }
 
-// }).then(res => {
-//   console.log(res.data);
-
-
-
-//   axios({
-//     method: 'post',
-//     url: 'http://114.55.38.15:15001/seat/insertAll',
-//     params: table
-
-//   }).then(res => {
-//     console.log(res.data);
-//   }).catch(err => {
-//     console.log(err);
-//   })
-
-// }).catch(err => {
-//   console.log(err);
-//   console.log('++++++++++++++');
-// })
+}).then(res => {
+  console.log(res.data);
 
 
-// let shopInfo = {
-//   title: '傣妹火锅',
-//   openTime: '9:30-14:30;16:30-21:30',
-//   phoneNum: '400851751',
-//   local: '雨湖区车站路33号3楼',
-//   classify: 'hotpot',
-//   label: '味道挺好，下次再点',
-//   shopAvatar: 1,
-//   sampleGraph: 1,
-//   fileld: [1]
+  axios({
+    method: 'get',
+    url: 'http://114.55.38.15:15001/shop/getShopAll',
+    params: {
+      sort: 'id'
+    }
 
-// }
+  }).then(res => {
+    console.log(res.data);
+  }).catch(err => {
+    console.log(err);
+  })
 
-// axios({
-//   method: 'post',
-//   url: 'http://114.55.38.15:15001/shop/insert',
-//   data: shopInfo
-// }).then(res => {
-//   console.log(res.data);
-// }).catch(err => {
-//   console.log(err);
-//   console.log('++++++');
-// })
+  // axios({
+  //   method: 'post',
+  //   url: 'http://114.55.38.15:15001/shop/insert',
+  //   data: {
+  //     title: '傣妹火锅',
+  //     openTime: '9:30-14:30;16:30-21:30',
+  //     phoneNum: '400851751',
+  //     local: '雨湖区车站路33号3楼',
+  //     classify: 'hotpot',
+  //     label: '味道挺好，下次再点',
+  //     shopAvatar: 1,
+  //     sampleGraph: 1,
+  //     fileld: [1]
 
-let indent={
+  //   }
+  // }).then(res => {
+  //   console.log(res.data);
+  // }).catch(err => {
+  //   console.log(err);
+  //   console.log('++++++');
+  // })
+
+
+
+  // axios({
+  //   method: 'post',
+  //   url: 'http://114.55.38.15:15001/seat/insertAll',
+  //   params: table
+
+  // }).then(res => {
+  //   console.log(res.data);
+  // }).catch(err => {
+  //   console.log(err);
+  // })
+
+}).catch(err => {
+  console.log(err);
+  console.log('++++++++++++++');
+})
+
+
+let shopInfo = {
+  title: '傣妹火锅',
+  openTime: '9:30-14:30;16:30-21:30',
+  phoneNum: '400851751',
+  local: '雨湖区车站路33号3楼',
+  classify: 'hotpot',
+  label: '味道挺好，下次再点',
+  shopAvatar: 1,
+  sampleGraph: 1,
+  fileld: [1]
+
+}
+
+
+let indent = {
   "userId": 1,
   "shopId": 4,
   "state": 21995023.139329597,

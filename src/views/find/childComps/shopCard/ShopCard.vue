@@ -1,6 +1,6 @@
 <template>
-  <div class="hotel-card">
-    <div class="goods-img"><img :src="shopData.shopImg" alt="" /></div>
+  <div class="hotel-card" @click="gotoShop()">
+    <div class="goods-img"><img :src="shopData.shopAvatarUrl"  /></div>
     <div class="info">
       <span class="title">{{ shopData.title }}</span>
 
@@ -27,6 +27,19 @@ export default {
       default: null,
     },
   },
+  methods:{
+    gotoShop() {
+      this.$router.push({
+        path: '/shop',
+          query: {
+            id: this.shopData.id
+          }
+      });
+    },
+  },
+  mounted(){
+    this.$bus.$emit('imageLoad')
+  }
 };
 </script>
 

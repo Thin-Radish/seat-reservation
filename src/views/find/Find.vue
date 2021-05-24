@@ -36,7 +36,7 @@
       </van-grid>
 
       <recommend>
-        <div v-for="(item, index) in recomData" :key="index" @click="goto('/shop')">
+        <div v-for="(item, index) in recomData" :key="index" >
           <recom-item :recomData="item" />
         </div>
       </recommend>
@@ -47,11 +47,12 @@
       </div>
      
 
-      <div v-for="(item, index) in shopData" :key="index" @click="goto('/shop')">
+      <div v-for="(item, index) in shopList" :key="index" >
         <shop-card :shopData="item" />
       </div>
       <div class="botton"></div>
     </scroll>
+
     <div class="copy-variety" v-show="isShow">
         <div class="title">附近商家</div>
         <tab-control :titles="['全部店铺', '销量排序', '好评排序']" />
@@ -68,6 +69,9 @@ import RecomItem from "views/find/childComps/recommend/RecomItem";
 
 import ShopCard from "views/find/childComps/shopCard/ShopCard.vue";
 
+
+import { getShopAll } from "api/shop";
+import debounce from 'common/utils/debounce'
 export default {
   name:"Find",
   components: {
@@ -159,7 +163,7 @@ export default {
           title: "华掌勺·蒸菜·小碗菜（熙春路店）",
         },
       ],
-
+      shopList:[],
       shopData: [
         {
           shopImg: require("../../assets/images/shop/shop-img/呷哺呷哺·火锅茶语（湘潭中心店）.jpg"),
@@ -306,20 +310,29 @@ export default {
     navScroll(postion){
       this.postionY = postion.y;
       this.isShow = postion.y<-750;
-    }
+    },
+
   },
   activated(){
-    // console.log('activated');
-    this.$refs.scroll.refresh();
-    // console.log(this.postionY);
-    // this.$refs.scroll.scrollTo(0,this.postionY,0);
+    this.$refs.scroll.refresh()
+   
   },
-  // deactivated(){
-  //   console.log('deactivated');
-  // }
-  // mounted(){
-  //   this.$refs.scroll.refresh();
-  // }
+
+
+  mounted(){
+    getShopAll('id').then(res=>{
+      console.log(res.data);
+      this.shopList = res.data;
+    }).catch(err=>{
+      console.log(err);
+    })
+
+    const refresh = debounce(this.$refs.scroll.refresh) 
+    this.$bus.$on('imageLoad',()=>{
+      refresh();
+    })
+  }
+
 
 
 };
@@ -406,7 +419,7 @@ export default {
   z-index: 10;
 }
 .botton {
-  height: 70px;
+  height: 80px;
   width: 100%;
 }
 </style>

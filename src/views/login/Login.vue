@@ -57,7 +57,8 @@ export default {
         if(res.code === 200){
           this.$store.commit('commitRole',1)
           sessionStorage.setItem("role",1);   
-          this.$router.replace("/index");
+          // this.$router.replace("/merchant");
+                    this.$router.replace("/index");
           Toast.success(res.message);
         }else{
           // Toast.fail(res.message);

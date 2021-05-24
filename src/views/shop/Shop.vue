@@ -1,72 +1,55 @@
 <template>
   <div class="hotel">
-    <!-- <scroll
-      class="contain"
-      @scroll="stopScroll"
-      :probeType="3"
-      ref="scroll"
-      contnetH="1000"
-    > -->
-      <div class="hotel-nav">
-        <img
-          @click="goback"
-          class="nav-left"
-          src="~assets/images/nav-bar/return.svg"
-          alt=""
-        />
-
-        <div class="nav-right">
-          <!-- <img src="../../assets/images/省略.svg" alt="" > -->
-          <img src="../../assets/images/nav-bar/collect.svg" alt="" />
-          <img src="../../assets/images/nav-bar/message.svg" alt="" />
-          <img src="../../assets/images/nav-bar/search.svg" alt="" />
-        </div>
-      </div>
-
+    <div class="hotel-nav">
       <img
-        src="~assets/images/shop/shop-img/CoCo.jpg"
+        @click="goback"
+        class="nav-left"
+        src="~assets/images/nav-bar/return.svg"
         alt=""
-        class="hotel-img"
       />
 
-      <div>
-        <div class="hotel-info">
-          <img
-            src="~assets/images/shop/shop-img/CoCo.jpg"
-            alt=""
-            class="hotel-icon"
-          />
-          <span class="title">卤味饭·热干面</span>
+      <div class="nav-right">
+        <!-- <img src="../../assets/images/省略.svg" alt="" > -->
+        <img src="../../assets/images/nav-bar/collect.svg" alt="" />
+        <img src="../../assets/images/nav-bar/message.svg" alt="" />
+        <img src="../../assets/images/nav-bar/search.svg" alt="" />
+      </div>
+    </div>
 
-          <div>
-            <div class="hot">
-              <img src="~assets/images/star.svg" alt="" />
-              <span>4.8 </span>
-              <span mon-sell>月售：564</span>
-            </div>
-            <div class="label">湘潭川菜好评榜第1名</div>
-            <div class="re-seat">座位剩余：18/10</div>
-            <!-- <div class="location">地址：湘潭市岳塘区湖南工程学院后街黄焖鸡</div> -->
-            <div class="welcome">
-              <img src="~assets/images/speaker.svg" alt="" />
-              欢迎光临，很高兴为您服务
-            </div>
+    <img :src="shopInfo.shopAvatarUrl"  class="hotel-img" />
+
+    <div>
+      <div class="hotel-info">
+        <img :src="shopInfo.shopAvatarUrl" class="hotel-icon" />
+        <span class="title">{{ shopInfo.title }}</span>
+        <div>
+          <div class="hot">
+            <img src="~assets/images/star.svg" alt="" />
+            <span>{{shopInfo.star}} </span>
+            <span mon-sell>月售：{{shopInfo.monSell}}</span>
+          </div>
+          <div class="label">{{shopInfo.label}}</div>
+          <div class="re-seat">座位剩余：{{shopInfo.remSeat}}/{{shopInfo.totalSeat}}</div>
+          <!-- <div class="location">地址：湘潭市岳塘区湖南工程学院后街黄焖鸡</div> -->
+          <div class="welcome">
+            <img src="~assets/images/speaker.svg" alt="" />
+            欢迎光临，很高兴为您服务
           </div>
         </div>
-        <van-sticky :offset-top="0" class="shop-nav">
-          <div>
-            <tab-control
-              :titles="['点菜', '评价', '商家']"
-              :path="['order', 'ratings', 'seller']"
-            />
-          </div>
-        </van-sticky>
       </div>
+      <van-sticky :offset-top="0" class="shop-nav">
+        <div>
+          <tab-control
+            :titles="['点菜', '评价', '商家']"
+            :path="childPath"
+          />
+        </div>
+      </van-sticky>
+    </div>
 
-      <keep-alive exclude="Order">
-        <router-view />
-      </keep-alive>
-    <!-- </scroll> -->
+    <keep-alive exclude="Order">
+      <router-view />
+    </keep-alive>
   </div>
 </template>
 
@@ -75,6 +58,7 @@ import NavBar from "components/common/navbar/NavBar";
 import TabControl from "components/content/tabControl/TabControl";
 import Scroll from "components/common/scroll/Scroll";
 
+import { getShopById } from "api/shop";
 export default {
   name: "Shop",
   components: {
@@ -83,41 +67,59 @@ export default {
     NavBar,
   },
   data() {
-    return {};
+    return {
+      shopInfo:{},
+      sellerInfo:{} ,
+      childPath:[
+        {
+          path:'order',
+          query: {
+            id: this.$route.query.id
+          }
+        },
+        {
+          path:'ratings',
+          query: {
+            id: this.$route.query.id
+          }
+        },
+        {
+          path:'seller',
+          query: {
+            id: this.$route.query.id
+          }
+        },
+
+      ]
+    };
   },
 
   methods: {
     goback() {
       this.$router.go(-1);
     },
-    toDetial() {
-      this.$router.replace("detial");
-    },
-    stopScroll(postion) {
-      // console.log(postion.y);
-      this.$bus.$on("shopStop", (posY) => {
-        
-        // this.$refs.scroll.scrollTo(0, posY, 0);
-        
-      });
+    getSellerInfo(shopInfo){
 
-      if(postion.y <= -210){
-        this.$refs.scroll.scrollTo(0, -210, 0);
-      }else{
-        // this.$bus.$emit("orderStop", 0);
-        
-      }
-        
+      //整理数据
+      this.sellerInfo.local =  shopInfo.local;
+      this.sellerInfo.phoneNum = shopInfo.phoneNum;
+      this.sellerInfo.openTime = shopInfo.openTime;
+      this.sellerInfo.imageUrls = shopInfo.imageUrls;
 
-    },
+      //上传至vuex
+      this.$store.commit('commitSellerInfo',this.sellerInfo)
+    }
   },
-  mounted() {},
-  // created() {
-  //   console.log("shop-created");
-  // },
-  // beforeDestroy() {
-  //   console.log("shop-beforeDestory");
-  // },
+  created() {
+    let shopId = this.$route.query.id
+    getShopById(shopId).then(res=>{
+      console.log(res);
+      this.shopInfo = res.data;
+      // this.getSellerInfo(this.shopInfo);
+    }).catch(err=>{
+      console.log(err);
+    })
+  },
 };
 </script>
 
@@ -126,23 +128,8 @@ export default {
   overflow: hidden;
   background: #f2f2f2;
   /* height: 100vh; */
-
-
 }
 
-
-.contain {
-  /* overflow: hidden; */
-  background: #f2f2f2;
-  /* height: 1000px; */
-  /* height: 100%; */
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0px;
-  bottom: 0px;
-  /* height: 100px; */
-}
 
 .hotel-nav {
   position: fixed;
@@ -227,6 +214,8 @@ export default {
   width: 100%;
   height: 130px;
   margin-bottom: 2px;
+  margin-top:-10px ;
+  margin-bottom:13px ;
 }
 
 .location {
