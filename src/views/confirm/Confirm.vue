@@ -27,7 +27,8 @@
         />
         <van-popup v-model="showPicker" position="bottom">
           <van-datetime-picker
-            v-model="currentTime"
+            :min-hour="currHours"
+            :min-minute = "currMinutes"
             :max-hour="23"
             type="time"
             @confirm="onConfirm"
@@ -99,10 +100,9 @@ export default {
   },
   data() {
     return {
-      time: "",
+      time:"",
       showPicker: false,
       text: "",
-      currentTime: "13:00",
       seatList: null,
       foodList: null,
       totalMoney: 0,
@@ -115,13 +115,24 @@ export default {
         return this.seatList.length;
       }
     },
+    currDay(){
+      var time = new Date();
+      return time.getMonth()+1+'-'+time.getDate();
+    },
+    currHours(){
+      return new Date().getHours();
+    },
+    currMinutes(){
+      return new Date().getMinutes()+1;
+    }
   },
+
   methods: {
     goback() {
       this.$router.go(-1);
     },
     onConfirm(time) {
-      this.time = time;
+      this.time = this.currDay+' '+time;
       this.showPicker = false;
     },
 
@@ -171,6 +182,11 @@ export default {
         this.indentDish.push(indentItem);
       })
     },
+    filterSeat(data){
+      data.forEach(item=>{
+        item.tableId++;
+      })
+    },
 
     //支付
     toPayFor(){
@@ -195,9 +211,10 @@ export default {
   created() {
     this.seatList = this.$store.state.seatList;
     this.foodList = this.$store.state.foodList;
-    // console.log(this.seatList);
+    console.log(this.seatList);
     // console.log(this.foodList);
     this.filterDish(this.foodList)
+    this.filterSeat(this.seatList)
     this.totalFee();
     this.setScroll();
   },
