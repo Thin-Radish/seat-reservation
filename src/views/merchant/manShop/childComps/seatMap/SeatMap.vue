@@ -31,15 +31,15 @@
           class="background"
         >
           <div v-if="item.type === 4">
-            <four-table :index="index" :state="item.state" :isRotate="item.isRotate"/>
+            <four-table :index="index" :seatItem="item"/>
           </div>
          
           <div v-if="item.type === 2">
-            <two-table :index="index" :state="item.state" :isRotate="item.isRotate" />
+            <two-table :index="index" :seatItem="item" />
           </div>
 
           <div v-if="item.type === 6">
-            <six-table :index="index" :state="item.state" :isRotate="item.isRotate" />
+            <six-table :index="index" :seatItem="item" />
           </div>
 
 
@@ -55,6 +55,7 @@
     </div>
     <div class="eidt">
       <div class="modMap">修改</div>
+      <input type="text" v-model.number="shopId">
       <div class="saveMap" @click="saveMap">保存</div>
     </div>
     <div class="sele-seat">
@@ -133,6 +134,7 @@ export default {
         // { x: 6, y: 11, w: 6, h: 2, i: "9", type: "checkout", isCol: false },
         // { x: 0, y: 13, w: 4, h: 1, i: "10", type: "door", isCol: false },
       ],
+      shopId:2,
       
     };
   },
@@ -149,24 +151,24 @@ export default {
     },
     addDouSeat(isRotate){
       let table={
-        x:9,y:9,w:2,h:3,i:this.layout.length,type:2,isRotate:isRotate,state:[0,0],shopId:11 
+        x:9,y:9,w:2,h:3,i:this.layout.length,type:2,isRotate:isRotate,state:[0,0],shopId:this.shopId
       }
       this.layout.push(table);
     },
     addFourSeat(isRotate){
       let table={
-        x:9,y:9,w:3,h:3,i:this.layout.length,type:4,isRotate:isRotate,state:[0,0,0,0],shopId:11 
+        x:9,y:9,w:3,h:3,i:this.layout.length,type:4,isRotate:isRotate,state:[0,0,0,0],shopId:this.shopId
       }
       this.layout.push(table);
     },
     addSixSeat(isRotate){
       let table={
-        x:7,y:9,w:4,h:3,i:this.layout.length,type:6,isRotate:isRotate,state:[0,0,0,0,0,0],shopId:11 
+        x:7,y:9,w:4,h:3,i:this.layout.length,type:6,isRotate:isRotate,state:[0,0,0,0,0,0],shopId:this.shopId
       }
       this.layout.push(table);
     },
     saveMap(){
-
+      console.log(this.shopId);
       let table = this.layout;
 
       setSeatMap(table).then(res=>{
@@ -174,8 +176,7 @@ export default {
       }).catch(err=>{
         console.log(err);
       })
-
-      // console.log(this.layout);
+      
     }
 
 

@@ -37,15 +37,15 @@
           </div> 
 
           <div v-if="item.type === 4">
-            <four-table :index="index" :state="item.state" :isRotate="item.isRotate"/>
+            <four-table :index="index" :seatItem="item"/>
           </div>
          
           <div v-if="item.type === 2">
-            <two-table :index="index" :state="item.state" :isRotate="item.isRotate" />
+            <two-table :index="index"  :seatItem="item"/>
           </div>
 
           <div v-if="item.type === 6">
-            <six-table :index="index" :state="item.state" :isRotate="item.isRotate" />
+            <six-table :index="index" :seatItem="item"/>
           </div>
         </grid-item>
       </grid-layout>
@@ -138,7 +138,7 @@ export default {
 
   mounted() {
     this.seatList = this.$store.state.seatList;
-    getSeatMap(10).then(res=>{
+    getSeatMap(this.$route.query.id).then(res=>{
       console.log(res.data);
       this.layout = res.data
     }).catch(err=>{

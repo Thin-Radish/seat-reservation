@@ -9,4 +9,21 @@ export function userLogin(info){
   })
 }
 
+export function userRegister(info){
+  return request({
+    method: 'post',
+    url:'/user/register',
+    data:qs.stringify(info)
+  })
+}
+
+
+export function setUserInfo(info){
+  return request({
+    method: 'post',
+    url:'/user/setData',
+    data:info
+  })
+}
+
 

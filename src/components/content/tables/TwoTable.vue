@@ -1,8 +1,8 @@
 <template>
-  <div class="tables" :class="{col:isRotate}">
+  <div class="tables" :class="{col:seatItem.isRotate}">
     
     <div class="top">
-      <img @click="isClick(0)" src="~assets/images/tables/chair-ed.svg" alt="" v-if="state[0]">
+      <img @click="isClick(0)" src="~assets/images/tables/chair-ed.svg" alt="" v-if="seatItem.state[0]">
       <img @click="isClick(0)" src="~assets/images/tables/chair-ing.svg" alt="" v-else-if="isSelect[0]">
       <img @click="isClick(0)" src="~assets/images/tables/chair.svg" alt="" v-else>
     </div>
@@ -13,7 +13,7 @@
     </div>
 
     <div class="botton" >
-      <img @click="isClick(1)" src="~assets/images/tables/chair-ed.svg" alt="" v-if="state[1]">
+      <img @click="isClick(1)" src="~assets/images/tables/chair-ed.svg" alt="" v-if="seatItem.state[1]">
       <img @click="isClick(1)" src="~assets/images/tables/chair-ing.svg" alt="" v-else-if="isSelect[1]">
       <img @click="isClick(1)" src="~assets/images/tables/chair.svg" alt="" v-else>
     </div>
@@ -27,15 +27,11 @@
 import { Toast } from 'vant';
   export default {
     props:{
-      isRotate:{
-        type:Boolean,
-        default:false
-      },
       index:Number,
-      state:{
-        type:Array,
-        default:[0,0]
-      },
+      seatItem:{
+        type:Object,
+        default:{},
+      }
     },
     data(){
       return{
@@ -46,14 +42,15 @@ import { Toast } from 'vant';
     methods:{
       isClick(i){
         //当座位可选时
-        if(!this.state[i]){
+        if(!this.seatItem.state[i]){
           
           let seatList = this.$store.state.seatList;
           //当座位没被选中时
           if(!this.isSelect[i]){
             let pos = {
               tableId:this.index,
-              seatId:i,
+              dbTableId:this.seatItem.id,  //数据库中的seatId
+              chairId:i,
               type:2,
             }
             seatList.push(pos);
@@ -61,7 +58,7 @@ import { Toast } from 'vant';
           }else{  
             //当座位选中时进行取消选中操作      
             for(let j =0; j<seatList.length; j++){
-              if(seatList[j].tableId === this.index && seatList[j].seatId === i){
+              if(seatList[j].tableId === this.index && seatList[j].chairId === i){
                 seatList.splice(j,1);
                 break;
               }
@@ -87,8 +84,8 @@ import { Toast } from 'vant';
 
       //接受发来的取消选中信息，并进行取消选中操作
       this.$bus.$on("seatCancel",pos=>{
-        if(pos.tableId === this.index && this.isSelect[pos.seatId] === true){
-          this.$set(this.isSelect,pos.seatId,false)
+        if(pos.tableId === this.index && this.isSelect[pos.chairId] === true){
+          this.$set(this.isSelect,pos.chairId,false)
         }
       })
     }

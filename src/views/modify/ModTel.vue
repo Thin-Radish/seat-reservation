@@ -7,7 +7,8 @@
 
     <div class="name">
       <van-field label="当前手机号" v-model="oldTel"  type="tel" readonly />
-      <van-field label="新的手机号" v-model="newTel" type="tel"/>
+      <van-field label="新的手机号" v-model="tel.number" type="tel"
+      :rules="[{ required: true, message: '请输入正确的手机号',validator: validateTel}]"/>
       <van-field
         v-model="sms"
         center
@@ -22,13 +23,16 @@
       <div></div>
     </div>
 
-    <com-button top="300" label="确认修改" background="#1989fa" />
+    <com-button top="300" label="确认修改" background="#1989fa" @click.native="onSubmit()" />
   </div>
 </template>
 
 <script>
 import NavBar from "components/common/navbar/NavBar";
 import ComButton from "components/common/button/ComButton";
+
+import {setUserInfo} from "api/user"
+import { Toast } from 'vant';
 export default {
   components: {
     NavBar,
@@ -37,7 +41,9 @@ export default {
   data() {
     return {
       oldTel: "18973835153",
-      newTel: "",
+      tel:{
+        number: "",
+      },
       sms:'',
     };
   },
@@ -45,6 +51,23 @@ export default {
     goBack(path) {
       this.$router.go(-1);
     },
+    onSubmit(){
+      if(this.validateTel(this.tel.number)){
+        setUserInfo(this.tel.number).then(res=>{
+
+          if(res.code === 200){
+            Toast.success('绑定成功');
+          }else{
+            Toast.fail('绑定失败');
+          }
+        }).catch(err=>{
+          console.log(err);
+        })
+      }
+    },
+    validateTel(val){
+        return /^1[3|4|5|7|8]\d{9}$/.test(val);
+    }
   },
 };
 </script>

@@ -7,6 +7,8 @@ Vue.use(VueRouter)
 
 
 const Login = () => import('views/login/Login')
+const Register = () => import('views/register/Register')
+
 const Index = () => import('views/Index')
 const Find = () => import('views/find/Find')
 const Message = () => import('views/message/Message')
@@ -57,6 +59,13 @@ const routes = [
   {
     path: "/login",
     component: Login,
+    meta:{
+      role:[0],
+    }
+  },
+  {
+    path: "/register",
+    component: Register,
     meta:{
       role:[0],
     }

@@ -100,13 +100,14 @@ export default {
   },
   data() {
     return {
-      time:"",
+      time:"2020-05-25 10:30",
       showPicker: false,
       text: "",
       seatList: null,
       foodList: null,
       totalMoney: 0,
       indentDish:[],
+      indentSeat:[],
     };
   },
   computed: {
@@ -117,14 +118,15 @@ export default {
     },
     currDay(){
       var time = new Date();
-      return time.getMonth()+1+'-'+time.getDate();
+      return time.getFullYear()+'-'+time.getMonth()+'-'+time.getDate();
     },
     currHours(){
       return new Date().getHours();
     },
     currMinutes(){
       return new Date().getMinutes()+1;
-    }
+    },
+    
   },
 
   methods: {
@@ -175,16 +177,21 @@ export default {
     //过滤下foodList数据
     filterDish(data){
       data.forEach(item=>{
-        let indentItem={
+        let dishItem={
           dishId:item.id,
           num:item.count,
         }
-        this.indentDish.push(indentItem);
+        this.indentDish.push(dishItem);
       })
     },
     filterSeat(data){
       data.forEach(item=>{
-        item.tableId++;
+        let seatItem={
+          tableId:item.dbTableId,
+          seatId:item.chairId,
+          type:item.type
+        }
+        this.indentSeat.push(seatItem)
       })
     },
 
@@ -195,7 +202,7 @@ export default {
         shopId:this.$route.query.id,
         arriveTime:this.time,
         orderDish:this.indentDish,
-        seats:this.seatList,
+        seats:this.indentSeat,
         price:this.totalMoney,
       }
       createIndent(indent).then(res=>{
@@ -204,6 +211,8 @@ export default {
         console.log(err);
       })
       console.log(indent);
+
+      
     }
 
 
@@ -211,13 +220,14 @@ export default {
   created() {
     this.seatList = this.$store.state.seatList;
     this.foodList = this.$store.state.foodList;
-    console.log(this.seatList);
-    // console.log(this.foodList);
+
     this.filterDish(this.foodList)
     this.filterSeat(this.seatList)
     this.totalFee();
     this.setScroll();
   },
+
+
 };
 </script>
 

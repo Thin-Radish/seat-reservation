@@ -2,7 +2,7 @@
   <div class="category">
     <nav-bar>
       <div slot="left" @click="goBack()"><img src="~assets/images/nav-bar/return-black.svg" alt=""></div>
-      <div slot="center">{{ title }}</div>
+      <div slot="center">{{ sortTitle }}</div>
     </nav-bar>
    
     <scroll class="content" ref="scroll">
@@ -32,7 +32,8 @@ export default {
   },
   data() {
     return {
-      title: "",
+      sortList:['hotpot','dessert','buffet','fastfood','wesfood','barbecue','fish','seafood'],
+      titleList:['火锅','甜品饮料','自助餐','小吃快餐','西餐','烧烤烤肉','香锅烤鱼','海鲜'],
       shopList:[],
       shopData: [
         {
@@ -182,6 +183,12 @@ export default {
       ],
     };
   },
+  computed:{
+    sortTitle(){
+      let sort = this.$route.params.type;
+      return this.titleList[this.sortList.indexOf(sort)];
+    }
+  },
   methods: {
     goto(path) {
       this.$router.push(path);
@@ -189,33 +196,12 @@ export default {
     goBack() {
       this.$router.go(-1);
     },
-    comTitle() {
-      let title = this.$route.params.type;
-      if (title === "hotpot") {
-        this.title = "火锅";
-      } else if (title === "dessert") {
-        this.title = "甜品饮料";
-      } else if (title === "buffet") {
-        this.title = "自助餐";
-      } else if (title === "fastfood") {
-        this.title = "小吃快餐";
-      } else if (title === "wesfood") {
-        this.title = "西餐";
-      } else if (title === "barbecue") {
-        this.title = "烧烤烤肉";
-      } else if (title === "fish") {
-        this.title = "香锅烤鱼";
-      } else if (title === "seafood") {
-        this.title = "海鲜";
-      }
-    },
+
   },
   created() {
-    this.comTitle();
 
-    getShopByType(this.title).then(res=>{
+    getShopByType(this.sortTitle).then(res=>{
       this.shopList = res.data;
-      console.log(res);
     }).catch(err=>{
       console.log(err);
     })

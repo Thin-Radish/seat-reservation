@@ -2,7 +2,7 @@
   <div class="seat-card" >
     <div class="paly">
       {{ pos.tableId+1 }}桌 <br />
-      {{ pos.seatId+1 }}坐
+      {{ pos.chairId+1 }}坐
     </div>
     <div class="close" @click="isClose">
       <img src="~assets/images/close.svg" alt="">
@@ -15,7 +15,6 @@ import debounce from 'common/utils/debounce'
 export default {
   props: {
     pos: Object,
-    index: Number,
   },
   data() {
     return {
@@ -25,7 +24,7 @@ export default {
     isClose:debounce(function(){
         let seatList = this.$store.state.seatList;
         for(let i =0; i<seatList.length; i++){
-        if(seatList[i].tableId === this.pos.tableId && seatList[i].seatId === this.pos.seatId){
+        if(seatList[i].tableId === this.pos.tableId && seatList[i].chairId === this.pos.chairId){
 
           //发送取消的信号给tables组件
           this.$bus.$emit("seatCancel",this.pos)

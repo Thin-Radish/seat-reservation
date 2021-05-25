@@ -1,29 +1,36 @@
 <template>
-  <div class="login">
-    <div class="register" @click="goto('/register')"><div>注册</div></div>
+  <div>
+    <nav-bar>
+      <div slot="left" @click="goBack()"><img src="~assets/images/nav-bar/return-black.svg" ></div>
+      <div slot="center">账号注册</div>
+    </nav-bar>
     <div class="content">
       <div class="logo"><img src="~assets/images/logo.png" alt="" ></div>
       <van-form @submit="onSubmit" >
         <van-field
-          v-model="loginForm.username"
+          v-model="register.username"
           name="name"
-          label="账号"
-          placeholder="账号"
-          left-icon="contact"
+          label="填写账号"
+          placeholder="数字、字母、下划线,长度4-16"
           right-icon="question-o"
           @click-right-icon="$toast('账号必须是数字、字母、下划线,长度4-16')"
           :rules="[{ required: true, message: '必须是数字、字母、下划线,长度4-16',validator: validateUsername}]"
         />  
         <van-field
-          v-model="loginForm.password"
+          v-model="register.password"
           type="password"
           name="password"
-          label="密码"
-          placeholder="密码"
-          left-icon="closed-eye"
+          label="填写密码"
+          placeholder="数字、字母、下划线,长度6-16"
           right-icon="question-o"
           @click-right-icon="$toast('密码必须是数字、字母、下划线,长度6-16')"
           :rules="[{ required: true, message: '必须是数字、字母、下划线,长度6-16',validator: validatePass}]"
+        />
+        <van-field
+          v-model="register.repPassword"
+          type="password"
+          name="password"
+          label="确认密码"
         />
         <div style="margin: 16px">
           <van-button
@@ -31,42 +38,50 @@
             block
             type="info"
             native-type="submit"
-            >登录</van-button
+            >立即注册</van-button
           >
         </div>
       </van-form>
     </div>
+
   </div>
 </template>
 
 <script>
-import {userLogin} from "api/user"
+import NavBar from "components/common/navbar/NavBar";
+
+import {userRegister} from "api/user"
 import { Toast } from 'vant';
 export default {
+  components: {
+    NavBar,
+  },
   data() {
     return {
-      loginForm: {
-          username: '',
+      register: {
+          name: '',
           password: '',
+          repPassword:'',
       },
     };
   },
   methods: {
     onSubmit(values) {
-
-      userLogin(values).then(res=>{
-        if(res.code === 200){
-          this.$store.commit('commitRole',1)
-          sessionStorage.setItem("role",1);   
-          this.$router.replace("/index");
-          Toast.success(res.message);
-        }else{
-          Toast.fail(res.message);
-        }
-        
-      }).catch(err=>{
-        console.log(err);
-      })
+      if(this.register.password === this.register.repPassword ){
+        userRegister(values).then(res=>{
+          if(res.code === 200){
+            this.$router.replace("/login");
+            Toast.success(res.message);
+          }else{
+            Toast.fail(res.message);
+          }
+        }).catch(err=>{
+          console.log(err);
+        })
+      }else{
+        Toast.fail('两次密码输入不一致');
+      }
+      
     },
 
     validateUsername(val) {
@@ -75,8 +90,8 @@ export default {
     validatePass(val) {
       return /^[0-9a-zA-Z_.-]{6,16}$/.test(val);
     },
-    goto(path) {
-      this.$router.push(path);
+    goBack() {
+      this.$router.go(-1);
     },
   },
 };
@@ -84,34 +99,17 @@ export default {
 
 
 <style scoped>
-.register{
-  width: 100%;
-  height: 50px;
-  box-sizing: border-box;
-  padding: 10px;
 
-}
-
-.register>div{
-  width: 50px;
-  height: 30px;
-  line-height: 30px;
-  float: right;
-  background:  #f3eeee;
-  text-align: center;
-  border-radius: 5px;
-  color: rgb(53, 52, 52);
-}
 
 .content{
   position: absolute;
-  top: 18%;
+  top: 15%;
   left: 10px;
   right: 10px;
 }
 
 .content /deep/ .van-field__label{
-  width: 3.5em;
+  width: 4em;
 }
 
 
