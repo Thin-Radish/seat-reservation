@@ -1,8 +1,8 @@
 <template>
   <div class="seat-card" >
     <div class="paly">
-      {{ pos.d }}桌 <br />
-      {{ pos.c }}坐
+      {{ pos.tableId+1 }}桌 <br />
+      {{ pos.seatId+1 }}坐
     </div>
     <div class="close" @click="isClose">
       <img src="~assets/images/close.svg" alt="">
@@ -23,11 +23,9 @@ export default {
   },
   methods: {
     isClose:debounce(function(){
-      console.log('das');
         let seatList = this.$store.state.seatList;
-        console.log(123);
         for(let i =0; i<seatList.length; i++){
-        if(seatList[i].d === this.pos.d && seatList[i].c === this.pos.c){
+        if(seatList[i].tableId === this.pos.tableId && seatList[i].seatId === this.pos.seatId){
 
           //发送取消的信号给tables组件
           this.$bus.$emit("seatCancel",this.pos)

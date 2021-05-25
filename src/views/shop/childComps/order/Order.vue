@@ -5,7 +5,7 @@
     <van-sticky :offset-top="40" z-index="-1">
       <div class="sidebar">
         <van-sidebar v-model="activeKey">
-          <div v-for="(item, index) in sort" :key="index">
+          <div v-for="(item, index) in dishSort" :key="index">
             <van-sidebar-item :title="item" />
           </div>
         </van-sidebar>
@@ -16,7 +16,7 @@
     <!-- <scroll class="content" :probeType="3" ref="scroll" @scroll="scrollPos" :isPropage="isPropage"> -->
       <div class="top"></div>
       <div class="card">
-        <div v-for="(item, index) in foodData" :key="index">
+        <div v-for="(item, index) in foodList[activeKey]" :key="index">
           <goods-card :shopData="item" />
         </div>
       </div>
@@ -32,6 +32,7 @@ import Scroll from "components/common/scroll/Scroll";
 import GoodsCard from "views/shop/childComps/order/goodsCard/GoodsCard";
 import ShopCart from "views/shop/childComps/order/shopCart/ShopCart";
 
+import { getDishList } from "api/dish";
 export default {
   name: "Order",
   components: {
@@ -43,9 +44,10 @@ export default {
     return {
       isPropage:false,
       activeKey: 0,
+      foodList:[],
       foodData: [
         {
-          shopImg: require("assets/images/shop/food-img/单人佛跳墙.jpg"),
+          shopImg: require("assets/images/shop/food-img/双人烧烤套餐.jpg"),
           name: "单人佛跳墙",
           monSell: "46",
           label: "门店销售第一",
@@ -157,19 +159,27 @@ export default {
           price: 15.9,
         },
       ],
-      sort: ["进店必买", "双拼卤饭", "卤菜小吃", "热干面", "手工粉"],
+      // sort: ["进店必买", "双拼卤饭", "卤菜小吃", "热干面", "手工粉"],
+      dishSort: [],
     };
   },
   computed: {
     selectFoods() {
-      let foodList = [];
-      this.foodData.forEach((item) => {
-        if (item.count > 0) {
-          foodList.push(item);
+      let cartList = [];
+      if(this.foodList.length){      //在组件创建时this.foodList为空
+
+        for (let i = 0; i < this.foodList.length; i++) {
+          this.foodList[i].forEach(item => {
+            if (item.count > 0) {
+              cartList.push(item);
+            }
+          });
+          
         }
-      });
-      this.$store.state.foodList = foodList;
-      return foodList;
+        // this.$store.state.foodList = cartList;
+        this.$store.commit('commitFoodList',cartList)
+      }
+      return cartList;
     },
   },
   methods: {
@@ -180,8 +190,21 @@ export default {
         this.$bus.$emit('shopStop',-210)
       }
       
-      
     },
+    getDishType(data){
+      for(let i=0; i<data.length; i++){
+        this.dishSort.push(data[i][0].type)
+      }
+    }
+  },
+  created(){
+    getDishList(1).then(res=>{
+      console.log(res.data);
+      this.getDishType(res.data)
+      this.foodList = res.data;
+    }).catch(err=>{
+      console.log(err);
+    })
   },
   mounted(){
     this.$bus.$on('orderStop',posY=>{
@@ -196,7 +219,7 @@ export default {
   overflow: hidden;
   position: relative;
   z-index: 1;
-
+  height: 100vh;
   /* margin-top: 70px; */
 }
 .sidebar {

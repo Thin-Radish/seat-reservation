@@ -58,8 +58,7 @@ export default {
     },
 
     afterRead(file) {
-      // this.formData.append("dishImgFile", file.file);
-      
+      this.formData.append("dishImgFile", file.file);
     },
     appendData(){
       this.formData.append("shopId", this.dish.shopId); 
@@ -70,6 +69,7 @@ export default {
       this.formData.append("type", this.dish.foodType);
     },
     commit(){
+
       this.appendData();
       addFood(this.formData).then(res=>{
         console.log(res);

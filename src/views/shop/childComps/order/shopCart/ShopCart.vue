@@ -16,7 +16,7 @@
     </div>
 
     <!--购物车右边-->
-    <div class="right" @click="goto('/seat')">选位置</div>
+    <div class="right" @click="gotoSeat('/seat')">选位置</div>
 
     <!-- 购物车列表 -->
     <div class="shopcart-list" v-show="listShow" :class="{ show: listShow }">
@@ -83,8 +83,13 @@ export default {
       this.isShow = false;
     },
 
-    goto(path) {
-      this.$router.push(path);
+    gotoSeat(path) {
+      this.$router.push({
+        path: '/seat',
+        query: {
+          id: this.$route.query.id
+        }
+      });
     },
   },
   computed: {

@@ -1,14 +1,14 @@
 <template>
   <div class="goods-card">
 
-    <div class="good-img"><img :src="shopData.shopImg" alt="" /></div>
+    <div class="good-img"><img :src="shopData.dishImg" alt="" /></div>
     <div class="info">
       <span class="title">{{ shopData.name }}</span>
       <div>
         <div class="hot">
           <span>月售：{{ shopData.monSell }} </span>
         </div>
-        <span class="label">{{ shopData.label }}</span>
+        <span class="label">{{ shopData.introduction }}</span>
       </div>
       <div class="price-wrapper">
         <div class="price">￥{{ shopData.price }}</div>

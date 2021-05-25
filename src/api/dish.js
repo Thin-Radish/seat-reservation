@@ -9,3 +9,13 @@ export function addFood(foodInfo){
     data:foodInfo
   })
 }
+
+export function getDishList(shopId){
+  return request({
+    method: 'get',
+    url:'/dish/getDishByType',
+    params:{
+      shopId:shopId
+    }
+  })
+}

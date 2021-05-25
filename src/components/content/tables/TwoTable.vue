@@ -52,15 +52,16 @@ import { Toast } from 'vant';
           //当座位没被选中时
           if(!this.isSelect[i]){
             let pos = {
-              d:this.index+1,
-              c:i+1,
+              tableId:this.index,
+              seatId:i,
+              type:2,
             }
             seatList.push(pos);
            
           }else{  
             //当座位选中时进行取消选中操作      
             for(let j =0; j<seatList.length; j++){
-              if(seatList[j].d === this.index+1 && seatList[j].c === i+1){
+              if(seatList[j].tableId === this.index && seatList[j].seatId === i){
                 seatList.splice(j,1);
                 break;
               }
@@ -86,8 +87,8 @@ import { Toast } from 'vant';
 
       //接受发来的取消选中信息，并进行取消选中操作
       this.$bus.$on("seatCancel",pos=>{
-        if(pos.d === this.index+1 && this.isSelect[pos.c-1] === true){
-          this.$set(this.isSelect,pos.c-1,false)
+        if(pos.tableId === this.index && this.isSelect[pos.seatId] === true){
+          this.$set(this.isSelect,pos.seatId,false)
         }
       })
     }

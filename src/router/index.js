@@ -13,7 +13,6 @@ const Message = () => import('views/message/Message')
 const Indent = () => import('views/indent/Indent')
 const Profile = () => import('views/profile/Profile')
 const Shop = () => import('views/shop/Shop')
-const Detial = () => import('views/detial/Detial')
 
 const Order = () => import('views/shop/childComps/order/Order')
 const Ratings = () => import('views/shop/childComps/ratings/Ratings')

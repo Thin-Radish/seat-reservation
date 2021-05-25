@@ -5,9 +5,9 @@
       <div slot="center">{{ title }}</div>
     </nav-bar>
    
-    <scroll class="content">
+    <scroll class="content" ref="scroll">
       <div class="split"></div>
-      <div v-for="(item, index) in shopData" :key="index" @click="goto('/shop')">
+      <div v-for="(item, index) in shopList" :key="index" >
         <shop-card :shopData="item" />
       </div>
     </scroll>
@@ -20,7 +20,11 @@ import NavBar from "components/common/navbar/NavBar";
 import Scroll from "components/common/scroll/Scroll";
 
 import ShopCard from "views/find/childComps/shopCard/ShopCard.vue";
+
+import { getShopByType } from "api/shop";
+import debounce from 'common/utils/debounce'
 export default {
+  name:'Category',
   components: {
     NavBar,
     Scroll,
@@ -29,6 +33,7 @@ export default {
   data() {
     return {
       title: "",
+      shopList:[],
       shopData: [
         {
           shopImg: require("../../assets/images/shop/shop-img/呷哺呷哺·火锅茶语（湘潭中心店）.jpg"),
@@ -189,7 +194,7 @@ export default {
       if (title === "hotpot") {
         this.title = "火锅";
       } else if (title === "dessert") {
-        this.title = "甜点饮品";
+        this.title = "甜品饮料";
       } else if (title === "buffet") {
         this.title = "自助餐";
       } else if (title === "fastfood") {
@@ -207,7 +212,20 @@ export default {
   },
   created() {
     this.comTitle();
+
+    getShopByType(this.title).then(res=>{
+      this.shopList = res.data;
+      console.log(res);
+    }).catch(err=>{
+      console.log(err);
+    })
   },
+  mounted(){
+    const refresh = debounce(this.$refs.scroll.refresh) 
+    this.$bus.$on('imageLoad',()=>{
+      refresh();
+    })
+  }
 };
 </script>
 

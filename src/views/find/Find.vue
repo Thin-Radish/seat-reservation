@@ -15,8 +15,6 @@
     </van-search>
 
 
-
-
     <scroll class="content" @scroll="navScroll" :probeType="3" ref="scroll">
       <van-swipe
         class="my-swipe"
@@ -101,7 +99,7 @@ export default {
         },
         {
           url: require("assets/images/category-icon/dessert.png"),
-          title: "甜点饮品",
+          title: "甜品饮料",
           type:"dessert"
         },
         {

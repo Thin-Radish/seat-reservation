@@ -19,9 +19,10 @@ export default {
   methods: {
     decrease() {
       this.listItem.count--;
-      this.listItem.count = (this.listItem.count<=0)?0:0
+      this.listItem.count = (this.listItem.count<=0)?0:this.listItem.count--
     },
     add() {
+      console.log(this.listItem);
       if (!this.listItem.count) {
         Vue.set(this.listItem, "count", 1);
       } else {

@@ -69,7 +69,7 @@
         </ul>
       </div>
     </div>
-    <div class="confirm" @click="toComfirm">{{ lable }}</div>
+    <div class="confirm" @click="gotoComfirm()">{{ lable }}</div>
   </div>
 </template>
 
@@ -125,8 +125,13 @@ export default {
     goback() {
       this.$router.go(-1);
     },
-    toComfirm(){
-      this.$router.push("/comfirm");
+    gotoComfirm(){
+      this.$router.push({
+        path: '/comfirm',
+        query: {
+          id: this.$route.query.id
+        }
+      });
     }
 
   },
@@ -144,7 +149,6 @@ export default {
   },
   watch:{
     seatList(){
-      console.log('更新');
       if(this.seatList.length ===0){
         this.lable = "请先选座"
       }else{

@@ -63,7 +63,7 @@ export default {
         openTime: "9:30-14:30;16:30-21:30",
         phoneNum: "18973835153",
         local: "",
-        classify: "火锅",
+        classify: "烧烤烤肉",
         label: "",
         shopAvatar: null,
         sampleGraph: null,

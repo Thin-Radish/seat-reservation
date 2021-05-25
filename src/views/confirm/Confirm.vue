@@ -1,81 +1,84 @@
 <template>
   <div class="confirm">
     <nav-bar>
-      <div slot="left" @click="goback()"><img src="~assets/images/nav-bar/return-black.svg" alt=""></div>
+      <div slot="left" @click="goback()">
+        <img src="~assets/images/nav-bar/return-black.svg"  />
+      </div>
       <div slot="center">确认订单</div>
     </nav-bar>
-<div class="content">
-    <div class="explain">
-      <div>订单填写</div>
-      <van-field
-        v-model="text"
-        type="text"
-        label="商家留言"
-        placeholder="输入留言信息"
-      />
-      <van-field
-        readonly
-        clickable
-        name="datetimePicker"
-        :value="time"
-        label="到店时间"
-        placeholder="点击选择时间"
-        @click="showPicker = true"
-      />
-      <van-popup v-model="showPicker" position="bottom">
-        <van-datetime-picker
-          v-model="currentTime"
-          :max-hour="23"
-          type="time"
-          @confirm="onConfirm"
-          @cancel="showPicker = false"
+
+    <div class="content">
+      <div class="explain">
+        <div>订单填写</div>
+        <van-field
+          v-model="text"
+          type="text"
+          label="商家留言"
+          placeholder="输入留言信息"
         />
-      </van-popup>
-      <div></div>
-    </div>
-
-    <div class="seat-list">
-      <div class="notice">
-        <img src="~assets/images/speaker-smell.svg" alt="">
-        座位最多保留30分钟
+        <van-field
+          readonly
+          clickable
+          name="datetimePicker"
+          :value="time"
+          label="到店时间"
+          placeholder="点击选择时间"
+          @click="showPicker = true"
+        />
+        <van-popup v-model="showPicker" position="bottom">
+          <van-datetime-picker
+            v-model="currentTime"
+            :max-hour="23"
+            type="time"
+            @confirm="onConfirm"
+            @cancel="showPicker = false"
+          />
+        </van-popup>
+        <div></div>
       </div>
 
-      <div class="card-wrapper" ref="cardView">
-        <ul class="card-list" ref="cardList">
-          <li
-            ref="cardItem"
-            class="card-item"
-            v-for="(item, index) in seatList"
-            :key="index"
-          >
-            <seat-card :pos="item" />
-          </li>
-        </ul>
-      </div>
-    </div>
+      <div class="seat-list">
+        <div class="notice">
+          <img src="~assets/images/speaker-smell.svg" alt="" />
+          座位最多保留30分钟
+        </div>
 
-    <div class="food-list">
-      <div class="shop-tile">卤肉饭·热干面（天虹店）</div>
-      <div class="list-wrapper" ref="listView">
-        <ul ref="foodList">
-          <li v-for="(item, index) in foodList" :key="index" ref="foodItem">
-            <food-card :food="item" />
-          </li>
-        </ul>
+        <div class="card-wrapper" ref="cardView">
+          <ul class="card-list" ref="cardList">
+            <li
+              ref="cardItem"
+              class="card-item"
+              v-for="(item, index) in seatList"
+              :key="index"
+            >
+              <seat-card :pos="item" />
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
 
-    <div class="book-fee">
-      <div class="book-fee-left">
-        <div>预定费用</div>
-        <div class="prompt">每个座位1元预定费</div>
+      <div class="food-list">
+        <div class="shop-tile">选菜详情列表</div>
+        <div class="list-wrapper" ref="listView">
+          <ul ref="foodList">
+            <li v-for="(item, index) in foodList" :key="index" ref="foodItem">
+              <food-card :food="item" />
+            </li>
+          </ul>
+        </div>
       </div>
-      <div class="seat-fee">￥{{ bookFee }}</div>
+
+      <div class="book-fee">
+        <div class="book-fee-left">
+          <div>预定费用</div>
+          <div class="prompt">每个座位1元预定费</div>
+        </div>
+        <div class="seat-fee">￥{{ bookFee }}</div>
+      </div>
     </div>
-</div>
     <div class="pay-content">
       <div class="togle-price">￥{{ totalMoney }}</div>
-      <div class="pay">立即支付</div>
+      <div class="pay" @click="toPayFor()">立即支付</div>
     </div>
   </div>
 </template>
@@ -85,8 +88,10 @@ import BScroll from "better-scroll";
 import NavBar from "components/common/navbar/NavBar";
 import SeatCard from "views/seat/childComps/seatCard/SeatCard";
 import foodCard from "./childComps/foodCard";
+
+import {createIndent} from "api/indent"
 export default {
-  name:'Comfirm',
+  name: "Comfirm",
   components: {
     NavBar,
     SeatCard,
@@ -101,6 +106,7 @@ export default {
       seatList: null,
       foodList: null,
       totalMoney: 0,
+      indentDish:[],
     };
   },
   computed: {
@@ -137,7 +143,7 @@ export default {
           let listH = this.$refs.foodItem[0].clientHeight;
           let marginT = 10;
           let height = (listH + marginT) * this.foodList.length;
-          this.$refs.foodList.style.height = height +20+ "px";
+          this.$refs.foodList.style.height = height + 20 + "px";
           this.scroll = new BScroll(this.$refs.listView, {
             scrollX: true,
           });
@@ -152,13 +158,46 @@ export default {
       if (this.seatList) {
         total += this.seatList.length;
       }
-      this.totalMoney = total.toFixed(2);
+      this.totalMoney = parseInt(total.toFixed(2))
     },
+
+    //过滤下foodList数据
+    filterDish(data){
+      data.forEach(item=>{
+        let indentItem={
+          dishId:item.id,
+          num:item.count,
+        }
+        this.indentDish.push(indentItem);
+      })
+    },
+
+    //支付
+    toPayFor(){
+      let indent = {
+        userId: 1,  //这里要在vux中拿到
+        shopId:this.$route.query.id,
+        arriveTime:this.time,
+        orderDish:this.indentDish,
+        seats:this.seatList,
+        price:this.totalMoney,
+      }
+      createIndent(indent).then(res=>{
+        console.log(res);
+      }).catch(err=>{
+        console.log(err);
+      })
+      console.log(indent);
+    }
+
+
   },
-  mounted() {
+  created() {
     this.seatList = this.$store.state.seatList;
     this.foodList = this.$store.state.foodList;
-
+    // console.log(this.seatList);
+    // console.log(this.foodList);
+    this.filterDish(this.foodList)
     this.totalFee();
     this.setScroll();
   },
@@ -172,7 +211,7 @@ export default {
   background: rgb(245, 245, 245);
 }
 
-.content{
+.content {
   position: absolute;
   top: 46px;
   bottom: 50px;
@@ -192,7 +231,6 @@ export default {
   padding: 15px 10px;
   box-sizing: border-box;
 }
-
 
 .seat-list {
   position: absolute;
@@ -215,7 +253,7 @@ export default {
   vertical-align: middle;
   color: rgb(163, 158, 158);
 }
-.notice>img{
+.notice > img {
   width: 17px;
   height: 17px;
   margin-right: 2px;
