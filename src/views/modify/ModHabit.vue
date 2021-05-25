@@ -7,19 +7,24 @@
 
 
     <div class="habits">
-      <van-field label="热爱食品" v-model="favFood"/>
-      <van-field label="口味偏好" v-model="flavor"/>
-      <van-field label="忌口食物" v-model="avoid" />
-      <div></div>
+      <van-form>
+        <van-field label="热爱食品" v-model="info.habit" :maxlength="12"/>
+        <van-field label="口味偏好" v-model="info.flavor" :maxlength="12"/>
+        <van-field label="忌口食物" v-model="info.avoid" :maxlength="12"/>
+        <div></div>
+      </van-form>
     </div>
 
-    <com-button top="300" label="确认修改" background="#1989fa"/>
+    <com-button top="300" label="确认修改" background="#1989fa" @click.native="onSubmit()"/>
   </div>
 </template>
 
 <script>
 import NavBar from "components/common/navbar/NavBar"
 import ComButton from "components/common/button/ComButton"
+
+import {setUserInfo} from "api/user"
+import { Toast } from 'vant';
   export default {
     components:{
       NavBar,
@@ -27,16 +32,30 @@ import ComButton from "components/common/button/ComButton"
     },
     data(){
       return{
-        favFood:'',
-        flavor:'',
-        avoid:'',
+        info:{
+          habit:'',
+          flavor:'',
+          avoid:'',
+        }
       }
     },
     methods:{
       goBack(path) {
         this.$router.go(-1);
       },
-    }
+      onSubmit(){
+        setUserInfo(this.info).then(res=>{
+          if(res.code === 200){
+            this.$router.replace("/profile");
+            Toast.success('设置成功');
+          }else{
+            Toast.fail('设置失败');
+          }
+        }).catch(err=>{
+            console.log(err);
+        })
+      },
+      }
   }
 </script>
 

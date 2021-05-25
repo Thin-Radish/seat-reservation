@@ -22,8 +22,27 @@ export function setUserInfo(info){
   return request({
     method: 'post',
     url:'/user/setData',
-    data:info
+    data:qs.stringify(info)
   })
 }
+
+export function modPassword(password){
+  return request({
+    method: 'post',
+    url:'/user/setting',
+    data:qs.stringify(password)
+  })
+}
+
+export function getUserInfo(userId){
+  return request({
+    method: 'post',
+    url:'/user/setting',
+    data:qs.stringify(password)
+  })
+}
+
+
+
 
 

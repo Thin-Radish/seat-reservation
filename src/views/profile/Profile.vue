@@ -79,6 +79,9 @@
 import Scroll from "components/common/scroll/Scroll";
 import NavBar from "components/common/navbar/NavBar";
 import Contain from "components/content/container/Contain";
+
+import {setUserInfo} from "api/user"
+import { Toast } from 'vant';
 export default {
   name:'Profile',
   components: {
@@ -90,17 +93,29 @@ export default {
     goto(path) {
       this.$router.push(path);
     },
+
+    //设置性别
     onConfirm(value){
       this.showPicker = false;
-      this.user.sex = value;
+      this.userSex.sex = value;
+      setUserInfo(this.userSex).then(res=>{
+        if(res.code === 200){
+            Toast.success('设置成功');
+        }else{
+            Toast.fail('设置失败');
+        }
+      }).catch(err=>{
+        console.log(err);
+      })
     }
   },
   data(){
     return{
       showPicker: false,
       columns:['男生','女生'],
-      userSex:'男生',
-
+      userSex:{
+        sex:'男'
+      },
       user:{
         name:"爱吃饭的瘦萝卜",
         sex:"男生",

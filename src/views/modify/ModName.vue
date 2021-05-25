@@ -6,13 +6,15 @@
     </nav-bar>
 
     <div class="name">
-      <van-field label="原有昵称" value="爱吃饭的瘦萝卜" readonly/>
-      <van-field 
-        name="name"
-        label="新的昵称"
-        v-model="newName"
-        :rules="[{ required: true, message: '限制3-8个之内英文或汉字',validator: validateName}]"/>
-      <div></div>
+      <van-form>
+        <van-field label="原有昵称" value="爱吃饭的瘦萝卜" readonly/>
+        <van-field 
+          name="name"
+          label="新的昵称"
+          v-model="info.name"
+          :rules="[{ required: true, message: '限制3-8个之内英文或汉字',validator: validateName}]"/>
+        <div></div>
+      </van-form>
     </div>
 
     <com-button @click.native="onSubmit()" top="300" label="确认修改" background="#1989fa"/>
@@ -33,7 +35,9 @@ import { Toast } from 'vant';
     },
     data(){
       return{
-        newName:'',
+        info:{
+          name:'',
+        } 
       }
     },
     methods:{
@@ -41,10 +45,12 @@ import { Toast } from 'vant';
         this.$router.go(-1);
       },
       onSubmit(){
-        if(this.validateName(this.newName)){
-          setUserInfo(this.newName).then(res=>{
+        if(this.validateName(this.info.name)){
+          
+          setUserInfo(this.info).then(res=>{
+            console.log(res);
             if(res.code === 200){
-              // this.$router.replace("/login");
+              this.$router.replace("/profile");
               Toast.success('修改成功');
             }else{
               Toast.fail('修改失败');
