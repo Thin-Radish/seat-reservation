@@ -30,15 +30,19 @@ export function modPassword(password){
   return request({
     method: 'post',
     url:'/user/setting',
-    data:qs.stringify(password)
+    data:{
+      password:password
+    }
   })
 }
 
 export function getUserInfo(userId){
   return request({
-    method: 'post',
-    url:'/user/setting',
-    data:qs.stringify(password)
+    method: 'get',
+    url:'/user/getById',
+    params:{
+      id:userId
+    }
   })
 }
 

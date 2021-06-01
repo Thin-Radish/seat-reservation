@@ -47,7 +47,7 @@
       </van-sticky>
     </div>
 
-    <keep-alive exclude="Order">
+    <keep-alive include="Order">
       <router-view />
     </keep-alive>
   </div>

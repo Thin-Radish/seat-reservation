@@ -44,7 +44,7 @@ const ManIndent = () => import('views/merchant/manIndent/ManIndent')
 const ManShop = () => import('views/merchant/manShop/ManShop')
 
 const AddFood = () => import('views/merchant/manMenu/childComps/AddFood')
-const IndentInfo = () => import('views/merchant/manIndent/childComps/IndentInfo')
+const IndentInfo = () => import('views/indent/childComps/IndentInfo')
 const SeatMap = () => import('views/merchant/manShop/childComps/seatMap/SeatMap')
 const SetShopInfo = () => import('views/merchant/manShop/childComps/setShopInfo/SetShopInfo')
 

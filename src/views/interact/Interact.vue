@@ -88,18 +88,21 @@ export default {
       }
     },
     send() {
-      let msg = {
-        ident: "host",
-        icon: require("../../assets/images/profile/avatar.svg"),
-        text: this.message,
-      };
-      this.msgAll.push(msg);
-      this.message = "";
+      // let msg = {
+      //   ident: "host",
+      //   icon: require("../../assets/images/profile/avatar.svg"),
+      //   text: this.message,
+      // };
+      // this.msgAll.push(msg);
+      // this.message = "";
 
-      this.$nextTick(() => {
-        this.$refs.scroll.refresh();
-        this.$refs.scroll.toBottom();
-      })
+      // this.$nextTick(() => {
+      //   this.$refs.scroll.refresh();
+      //   this.$refs.scroll.toBottom();
+      // })
+
+      this.$store.state.ws.send(this.message);
+      console.log(this.$store.state.recMsg.data);
     },
   },
 

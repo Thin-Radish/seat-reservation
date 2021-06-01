@@ -1,7 +1,5 @@
 <template>
   <div class="find">
-
-    
     <van-search
       show-action
       label="店铺"
@@ -15,13 +13,16 @@
     </van-search>
 
 
-    <scroll class="content" @scroll="navScroll" :probeType="3" ref="scroll">
-      <van-swipe
-        class="my-swipe"
-        :autoplay="3000"
-        indicator-color="white"
-        height="150"
-      >
+    <scroll class="content" 
+            @scroll="navScroll" 
+            :probeType="3" 
+            ref="scroll"
+            :pull-up-load="true"
+            @pullingUp="loadMore">
+      <van-swipe class="my-swipe"
+                :autoplay="3000"
+                indicator-color="white"
+                height="150">
         <van-swipe-item v-for="(image, index) in swipeImg" :key="index">
           <img :src="image" alt="" />
         </van-swipe-item>
@@ -41,20 +42,25 @@
 
       <div class="variety">
         <div class="title">附近商家</div>
-        <tab-control :titles="['全部店铺', '销量排序', '好评排序']" />
+        <tab-control 
+          :titles="['全部店铺', '销量排序', '好评排序']"
+          @tabClick="tabClick"
+          ref="tabControl_1" />
       </div>
      
 
       <div v-for="(item, index) in shopList" :key="index" >
         <shop-card :shopData="item" />
       </div>
-      <div class="botton"></div>
     </scroll>
 
     <div class="copy-variety" v-show="isShow">
         <div class="title">附近商家</div>
-        <tab-control :titles="['全部店铺', '销量排序', '好评排序']" />
-      </div>
+        <tab-control 
+          :titles="['全部店铺', '销量排序', '好评排序']" 
+          @tabClick="tabClick"
+          ref="tabControl_2" />
+    </div>
   </div>
 </template>
 
@@ -66,7 +72,6 @@ import Recommend from "views/find/childComps/recommend/Recommend";
 import RecomItem from "views/find/childComps/recommend/RecomItem";
 
 import ShopCard from "views/find/childComps/shopCard/ShopCard.vue";
-
 
 import { getShopAll } from "api/shop";
 import debounce from 'common/utils/debounce'
@@ -85,6 +90,10 @@ export default {
       postionY:null,
       active: 0,
       isShow:false,
+      shops:{
+        currentSort:'id',//默认以id排序获取
+        currentPage:0,   //默认当前为第一页
+      },
       swipeImg: [
         require("assets/images/swiper/swiper1.jpg"),
         require("assets/images/swiper/swiper2.jpg"),
@@ -162,174 +171,105 @@ export default {
         },
       ],
       shopList:[],
-      shopData: [
-        {
-          shopImg: require("../../assets/images/shop/shop-img/呷哺呷哺·火锅茶语（湘潭中心店）.jpg"),
-          title: "呷哺呷哺·火锅茶语（湘潭中心店）",
-          star: "4.7",
-          monSell: "1138",
-          label: " 味道挺好的，下次再点",
-          totalSeat: "18",
-          remSeat: "15",
-        },
-        {
-          shopImg: require("../../assets/images/shop/shop-img/夫子庙老鸭粉丝馆（城市盒子店）.jpg"),
-          title: "夫子庙老鸭粉丝馆（城市盒子店）",
-          star: "4.9",
-          monSell: "1380",
-          label: "真宗的东北味",
-          totalSeat: "30",
-          remSeat: "11",
-        },
-        {
-          shopImg: require("../../assets/images/shop/shop-img/乐山自助火锅（天虹店）.jpg"),
-          title: "乐山自助火锅（天虹店）",
-          star: "4.6",
-          monSell: "538",
-          label: "好吃的烤鱼，不能错过",
-          totalSeat: "25",
-          remSeat: "14",
-        },
-        {
-          shopImg: require("../../assets/images/shop/shop-img/捞缘椰子鸡·猪肚鸡火锅（湘潭万达店）.png"),
-          title: "捞缘椰子鸡·猪肚鸡火锅（湘潭万达店）",
-          star: "4.8",
-          monSell: "1588",
-          label: " 香辣猪脚，陆湘烤蹄",
-          totalSeat: "13",
-          remSeat: "8",
-        },
-        {
-          shopImg: require("../../assets/images/shop/shop-img/昭日料理（万达店）.jpg"),
-          title: "昭日料理（万达店）",
-          star: "4.6",
-          monSell: "560",
-          label: " 香辣猪脚，陆湘烤蹄",
-          totalSeat: "48",
-          remSeat: "30",
-        },
-        {
-          shopImg: require("../../assets/images/shop/shop-img/李喜欢手工虾（万达店）.jpg"),
-          title: "李喜欢手工虾（万达店）",
-          star: "4.8",
-          monSell: "1588",
-          label: " 香辣猪脚，陆湘烤蹄",
-          totalSeat: "13",
-          remSeat: "8",
-        },
-        {
-          shopImg: require("../../assets/images/shop/shop-img/柒酒烤肉（科大店）.jpg"),
-          title: "柒酒烤肉（科大店）",
-          star: "4.8",
-          monSell: "1588",
-          label: " 香辣猪脚，陆湘烤蹄",
-          totalSeat: "13",
-          remSeat: "8",
-        },
-         {
-          shopImg: require("../../assets/images/shop/shop-img/Mr.胡韩式料理.jpg"),
-          title: "Mr.胡韩式料理",
-          star: "4.8",
-          monSell: "1588",
-          label: " 香辣猪脚，陆湘烤蹄",
-          totalSeat: "13",
-          remSeat: "8",
-        },
-        {
-          shopImg: require("../../assets/images/shop/shop-img/傣妹火锅（潭城店）.jpg"),
-          title: "傣妹火锅（潭城店）",
-          star: "4.8",
-          monSell: "1588",
-          label: " 香辣猪脚，陆湘烤蹄",
-          totalSeat: "13",
-          remSeat: "8",
-        },
-        {
-          shopImg: require("../../assets/images/shop/shop-img/田村长干爆牛蛙（万达店）.jpg"),
-          title: "田村长干爆牛蛙（万达店）",
-          star: "4.8",
-          monSell: "1588",
-          label: " 香辣猪脚，陆湘烤蹄",
-          totalSeat: "13",
-          remSeat: "8",
-        },
-        {
-          shopImg: require("../../assets/images/shop/shop-img/索M小串（天虹店）.jpg"),
-          title: "索M小串（天虹店）",
-          star: "4.8",
-          monSell: "1588",
-          label: " 香辣猪脚，陆湘烤蹄",
-          totalSeat: "13",
-          remSeat: "8",
-        },
-        {
-          shopImg: require("../../assets/images/shop/shop-img/老福州.jpg"),
-          title: "老福州",
-          star: "4.8",
-          monSell: "1588",
-          label: " 香辣猪脚，陆湘烤蹄",
-          totalSeat: "13",
-          remSeat: "8",
-        },
-        {
-          shopImg: require("../../assets/images/shop/shop-img/肖友记卤粉.jpg"),
-          title: "肖友记卤粉",
-          star: "4.8",
-          monSell: "1588",
-          label: " 香辣猪脚，陆湘烤蹄",
-          totalSeat: "13",
-          remSeat: "8",
-        },
-        {
-          shopImg: require("../../assets/images/shop/shop-img/花雕醉鸡（湘潭总店）.png"),
-          title: "花雕醉鸡（湘潭总店）",
-          star: "4.8",
-          monSell: "1588",
-          label: " 香辣猪脚，陆湘烤蹄",
-          totalSeat: "13",
-          remSeat: "8",
-        },
-        {
-          shopImg: require("../../assets/images/shop/shop-img/蛙来哒（华隆步步高店）.jpg"),
-          title: "蛙来哒（华隆步步高店）",
-          star: "4.8",
-          monSell: "1588",
-          label: " 香辣猪脚，陆湘烤蹄",
-          totalSeat: "13",
-          remSeat: "8",
-        },
-      ],
+
     };
   },
-  methods: {
-    goto(path) {
-      this.$router.push(path);
-    },
-    navScroll(postion){
-      this.postionY = postion.y;
-      this.isShow = postion.y<-750;
-    },
+  created(){
+    //店铺数据请求
+    // todo
+    this.shopList=[]; 
+    this.getShopInfo(this.shops);
 
+    //连接即时通讯
+    // this.$store.commit('initWebsocket');
   },
-  activated(){
-    this.$refs.scroll.refresh()
-   
-  },
-
 
   mounted(){
-    getShopAll('id').then(res=>{
-      console.log(res.data);
-      this.shopList = res.data;
-    }).catch(err=>{
-      console.log(err);
-    })
-
+    //监听item中图片加载完成(防抖动后)
     const refresh = debounce(this.$refs.scroll.refresh) 
     this.$bus.$on('imageLoad',()=>{
       refresh();
     })
-  }
+  },
+  activated(){
+    //解决移动端浏览器不能keep-alive问题
+    this.$refs.scroll.refresh()
+  },
+  methods: {
+
+    /**
+     * 事件处理相关
+     */
+    //路由跳转
+    goto(path) {
+      this.$router.push(path);
+    },
+    //navbar是否吸顶
+    navScroll(postion){
+      this.postionY = postion.y;
+      this.isShow = postion.y<-750;
+    },
+    //切换栏切换
+    tabClick(index) {
+      switch (index) {
+        case 0:
+          this.shops.currentSort = "id";
+          break;
+        case 1:
+          this.shops.currentSort = "mon_sell";
+          break;
+        case 2:
+          this.shops.currentSort = "star";
+          break;
+      }
+      this.$refs.tabControl_1.currentIndex = index
+      this.$refs.tabControl_2.currentIndex = index
+
+      //切换后请求数据要先初始化
+      this.shopList = [];
+      this.shops.currentPage = 0;
+      
+      //重新进行排序请求
+      this.getShopInfo(this.shops);
+    },
+    loadMore(){ 
+      if(this.shopList.length){  //预防第一页数据没请求到就执行下拉加载
+        this.getShopInfo(this.shops)
+      }
+    },
+
+
+    /**
+     * 网络请求相关
+     */
+
+    getShopInfo(shops){
+      getShopAll(shops).then(res=>{
+        // console.log(res.data);
+        // console.log(this.shops.currentPage);
+
+        //往数据添加数据而不是赋值
+        this.shopList.push(...res.data);
+        //数据请求完后页数加一
+        this.shops.currentPage++;
+
+        //判断是否为最后一页
+        if(res.data.length !=0){
+          //当不是最后一页时，才能上拉加载更多
+          //只有当scroll完成finishPullUp()时才能触发下次上拉请求
+          this.$refs.scroll.finishPullUp();
+        }else{
+          this.$toast('到底了啦！')
+        }
+      })
+      .catch(err=>{
+        console.log(err);
+      })
+    }
+
+  },
+
+
 
 
 
@@ -416,9 +356,6 @@ export default {
   background: white;
   z-index: 10;
 }
-.botton {
-  height: 80px;
-  width: 100%;
-}
+
 </style>
 

@@ -27,6 +27,7 @@ import { Toast } from 'vant';
 
 Vue.use(Toast);
 
+
 Vue.use(Uploader);
 
 

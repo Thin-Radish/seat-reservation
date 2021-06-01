@@ -1,68 +1,69 @@
 <template>
   <div class="confirm">
     <nav-bar>
-      <div slot="left" @click="goback()"><img src="~assets/images/nav-bar/return-black.svg" alt=""></div>
+      <div slot="left" @click="goback()">
+        <img src="~assets/images/nav-bar/return-black.svg" alt="" />
+      </div>
       <div slot="center">订单信息</div>
     </nav-bar>
-<div class="content">
-    <div class="explain">
-      <div>订单留言</div>
-      <van-field
-        v-model="text"
-        type="text"
-        label="用户留言"
-        readonly
-      />
-      <van-field
-        v-model="time"
-        type="text"
-        label="到店时间"
-        readonly
-      />
-      <div></div>
-    </div>
-
-    <div class="seat-list">
-      <div class="notice">
-        座位预定
+    
+    <div class="content">
+      <div class="explain">
+        <div>订单留言</div>
+        <van-field
+          :value="indentInfo.levWords"
+          type="text"
+          label="用户留言"
+          readonly
+        />
+        <van-field
+          :value="indentInfo.arriveTime"
+          type="text"
+          label="到店时间"
+          readonly
+        />
+        <div></div>
       </div>
 
-      <div class="card-wrapper" ref="cardView">
-        <ul class="card-list" ref="cardList">
-          <li
-            ref="cardItem"
-            class="card-item"
-            v-for="(item, index) in seatList"
-            :key="index"
-          >
-            <seat-card :pos="item" />
-          </li>
-        </ul>
-      </div>
-    </div>
+      <div class="seat-list">
+        <div class="notice">座位预定</div>
 
-    <div class="food-list">
-      <div class="shop-tile">用户点单</div>
-      <div class="list-wrapper" ref="listView">
-        <ul ref="foodList">
-          <li v-for="(item, index) in foodList" :key="index" ref="foodItem">
-            <food-card :food="item" />
-          </li>
-        </ul>
+        <div class="card-wrapper" ref="cardView">
+          <ul class="card-list" ref="cardList">
+            <li
+              ref="cardItem"
+              class="card-item"
+              v-for="(item, index) in seatList"
+              :key="index"
+            >
+              <seat-card :pos="item" />
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
 
-    <div class="book-fee">
-      <div class="book-fee-left">
-        <div>预定费用</div>
-        <div class="prompt">每个座位1元预定费</div>
+      <div class="food-list">
+        <div class="shop-tile">用户点单</div>
+        <div class="list-wrapper" ref="listView">
+          <ul ref="foodList">
+            <li v-for="(item, index) in foodList" :key="index" ref="foodItem">
+              <food-card :food="item" />
+            </li>
+          </ul>
+        </div>
       </div>
-      <div class="seat-fee">￥{{ bookFee }}</div>
+
+      <div class="book-fee">
+        <div class="book-fee-left">
+          <div>预定费用</div>
+          <div class="prompt">每个座位1元预定费</div>
+        </div>
+        <div class="seat-fee">￥{{ bookFee }}</div>
+      </div>
     </div>
-</div>
     <div class="pay-content">
-      <div class="togle-price">￥{{ totalMoney }}</div>
-      <div class="pay" v-if="isNew">接受订单</div>
+      <div class="togle-price">订单金额：</div>
+      <div class="pay" v-if="isNew">￥{{ totalPrice }}</div>
     </div>
   </div>
 </template>
@@ -71,69 +72,64 @@
 import BScroll from "better-scroll";
 import NavBar from "components/common/navbar/NavBar";
 import SeatCard from "views/seat/childComps/seatCard/SeatCard";
-import foodCard from "./foodCard";
+import foodCard from "components/content/foodCard/foodCard";
+
+import { getIndentById } from "api/indent";
 export default {
-  name:'Comfirm',
+  name: "Comfirm",
   components: {
     NavBar,
     SeatCard,
     foodCard,
   },
-  props:{
-    isNew:{
-      type:Boolean,
-      default:true,
-    }
+  props: {
+    isNew: {
+      type: Boolean,
+      default: true,
+    },
   },
   data() {
     return {
-      text: "希望多加汤，少辣",
-      time: "19:40",
-      seatList: [
-        { d:1,c:1},
-        { d:1,c:2},
-        { d:1,c:3},
-      ],
-      foodList: [
-        {
-          shopImg: require("assets/images/shop/food-img/单人佛跳墙.jpg"),
-          name: "单人佛跳墙",
-          monSell: "46",
-          price: 65.9,
-          count:1,
-        },
-        {
-          shopImg: require("assets/images/shop/food-img/豪气麻辣米线.jpg"),
-          name: "豪气麻辣米线",
-          monSell: "35",
-          label: "烤鱼、鲈鱼",
-          price: 59.1,
-          count:1,
-        },
-        {
-          shopImg: require("assets/images/shop/food-img/黄金牛油.png"),
-          name: "黄金牛油",
-          monSell: "18",
-          label: " 猪脚、烤蹄",
-          price: 33.1,
-          count:1,
-        },
-        {
-          shopImg: require("assets/images/shop/food-img/烤肉串.png"),
-          name: "烤肉串",
-          monSell: "32",
-          label: " 虾米、粉条、葱",
-          price: 28.5,
-          count:1,
-        },
-      ],
-      totalMoney: 0,
+      indentInfo: {},
     };
   },
   computed: {
     bookFee() {
-      if (this.seatList) {
-        return this.seatList.length;
+      if (this.indentInfo.seats) {
+        return this.indentInfo.seats.length;
+      }
+    },
+    totalPrice() {
+      if (this.indentInfo.price) {
+        return this.indentInfo.price + this.bookFee;
+      }
+    },
+    seatList() {
+      if (this.indentInfo.seats) {
+        let seats = [];
+        this.indentInfo.seats.forEach((item) => {
+          let seatItem = {
+            tableId: item.tableId,
+            chairId: item.seatId,
+          };
+          seats.push(seatItem);
+        });
+
+        //要等seatCard创建完后才能获取ref   computed执行在mounted之后
+        this.setSeatScroll();
+        return seats;
+      }
+    },
+
+    foodList() {
+      if (this.indentInfo.orderDish) {
+        let foods = [];
+        this.indentInfo.orderDish.forEach((item) => {
+          item.dish.count = item.num;
+          foods.push(item.dish);
+        });
+        this.setFoodScroll();
+        return foods;
       }
     },
   },
@@ -142,7 +138,7 @@ export default {
       this.$router.go(-1);
     },
 
-    setScroll() {
+    setSeatScroll() {
       this.$nextTick(() => {
         if (this.seatList.length != 0) {
           let cardW = this.$refs.cardItem[0].clientWidth;
@@ -154,36 +150,31 @@ export default {
           });
         }
       });
+    },
 
+    setFoodScroll() {
       this.$nextTick(() => {
         if (this.foodList.length != 0) {
           let listH = this.$refs.foodItem[0].clientHeight;
           let marginT = 10;
           let height = (listH + marginT) * this.foodList.length;
-          this.$refs.foodList.style.height = height +20+ "px";
+          this.$refs.foodList.style.height = height + 20 + "px";
           this.scroll = new BScroll(this.$refs.listView, {
             scrollX: true,
           });
         }
       });
     },
-    totalFee() {
-      let total = 0;
-      this.foodList.forEach((val) => {
-        total += val.count * val.price;
-      });
-      if (this.seatList) {
-        total += this.seatList.length;
-      }
-      this.totalMoney = total.toFixed(2);
-    },
   },
-  mounted() {
-    // this.seatList = this.$store.state.seatList;
-    // this.foodList = this.$store.state.foodList;
-
-    this.totalFee();
-    this.setScroll();
+  created() {
+    getIndentById(3)
+      .then((res) => {
+        console.log(res);
+        this.indentInfo = res.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   },
 };
 </script>
@@ -195,7 +186,7 @@ export default {
   background: rgb(245, 245, 245);
 }
 
-.content{
+.content {
   position: absolute;
   top: 46px;
   bottom: 50px;
@@ -216,7 +207,6 @@ export default {
   box-sizing: border-box;
 }
 
-
 .seat-list {
   position: absolute;
   top: 28%;
@@ -236,7 +226,6 @@ export default {
   font-size: 14px;
   display: flex;
   vertical-align: middle;
-
 }
 
 .card-wrapper {
@@ -322,8 +311,6 @@ export default {
   flex: 1;
   text-align: center;
   line-height: 50px;
-  font-size: 18px;
-  font-weight: 600;
   color: #fff;
 }
 
@@ -334,5 +321,8 @@ export default {
   background: blanchedalmond;
   border-radius: 30px;
   transform: translateX(1px);
+
+  font-size: 18px;
+  font-weight: 600;
 }
 </style>

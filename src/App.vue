@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <keep-alive exclude="Shop,ModName,Seat,Comfirm,Interact,Category">
+    <keep-alive exclude="ModName,Seat,Comfirm,Interact,Category,Shop">
       <router-view />
     </keep-alive>
   </div>

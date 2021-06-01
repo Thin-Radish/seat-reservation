@@ -68,6 +68,7 @@
           </ul>
         </div>
       </div>
+      
 
       <div class="book-fee">
         <div class="book-fee-left">
@@ -88,7 +89,7 @@
 import BScroll from "better-scroll";
 import NavBar from "components/common/navbar/NavBar";
 import SeatCard from "views/seat/childComps/seatCard/SeatCard";
-import foodCard from "./childComps/foodCard";
+import foodCard from "components/content/foodCard/foodCard";
 
 import {createIndent} from "api/indent"
 export default {
@@ -198,7 +199,7 @@ export default {
     //支付
     toPayFor(){
       let indent = {
-        userId: 1,  //这里要在vux中拿到
+        userId: this.$store.state.userId,  //这里要在vux中拿到
         shopId:this.$route.query.id,
         arriveTime:this.time,
         orderDish:this.indentDish,

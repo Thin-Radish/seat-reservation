@@ -155,7 +155,6 @@ export default {
         this.lable = "立即订坐"
       }
 
-
       this.$nextTick(() => {
         if (this.seatList.length !=0) {
           let cardW = this.$refs.cardItem[0].clientWidth;

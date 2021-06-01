@@ -56,8 +56,9 @@ export default {
 
       userLogin(values).then(res=>{
         if(res.code === 200){
-          this.$store.commit('commitRole',1)
-          sessionStorage.setItem("role",1);   
+          this.$store.commit('commitRole',1);
+          this.$store.commit('commitUserId',res.data.id);
+          // sessionStorage.setItem("role",1);   
           this.$router.replace("/index");
           Toast.success(res.message);
         }else{

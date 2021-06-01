@@ -9,3 +9,28 @@ export function createIndent(indentInfo){
   })
 }
 
+
+
+export function getIndentAll(page){
+  return request({
+    method: 'get',
+    url: '/order/getMy',
+    params: {
+      page:0,
+    }
+  })
+}
+
+export function getIndentById(OrderId){
+  return request({
+    method: 'get',
+    url: '/order/getOrderById',
+    params: {
+      id:OrderId
+    }
+  })
+}
+
+
+
+

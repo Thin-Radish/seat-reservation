@@ -12,7 +12,7 @@
         </div>
         <span class="label">{{ shopData.label }}</span>
         <div class="re-seat">
-          座位剩余：{{ shopData.totalSeat }}/{{ shopData.remSeat }}
+          座位剩余：{{ shopData.remSeat }}/{{ shopData.totalSeat }}
         </div>
       </div>
     </div>

@@ -18,12 +18,13 @@ export function setShopInfo(info){
   })
 }
 
-export function getShopAll(sortWay){
+export function getShopAll(shops){
   return request({
     method: 'get',
     url:'/shop/getShopAll',
     params:{
-      sort:sortWay
+      sort:shops.currentSort,
+      page:shops.currentPage
     }
   })
 }
@@ -60,52 +61,3 @@ export function getDetailById(shopId){
 
 
 
-
-
-let indent = {
-  
-  "userId": 1,
-  "shopId": 4,
-  "arriveTime": "2020-9-9 19:20:12",
-  "orderDish": [
-    {
-      "dishId": 2,
-      "num": 2
-    },
-    {
-      "dishId": 2,
-      "num": 2
-    },
-    {
-      "dishId": 2,
-      "num": 2
-    },
-    {
-      "dishId": 2,
-      "num": 2
-    }
-  ],
-  "price": 12,
-  "seats": [
-    {
-      "tableId": 1,
-      "seatId": 2,
-      "type": 4
-    },
-    {
-      "tableId": 1,
-      "seatId": 1,
-      "type": 4
-    },
-    {
-      "tableId": 2,
-      "seatId": 2,
-      "type": 6
-    },
-    {
-      "tableId": 2,
-      "seatId": 4,
-      "type": 6
-    }
-  ]
-}

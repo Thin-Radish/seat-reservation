@@ -38,7 +38,7 @@ export default {
       if (this.path&&!this.$route.path.includes(this.path[index]) ){
         this.$router.replace(this.path[index]);
       }
-      // this.$emit('tabClick',index)
+      this.$emit('tabClick',index)
     },
   },
 };

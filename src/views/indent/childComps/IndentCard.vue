@@ -1,17 +1,17 @@
 <template>
-  <div class="contain">
+  <div class="contain" @click="goto('/indentinfo')">
     <div class="card-head">
-      <div class="shop-title">{{indent.shopTitle}}</div>
+      <div class="shop-title">{{indent.shopName}}</div>
       <div class="state">{{state}}</div>
     </div>
     <div class="card-content">
       <div class="content-left">
-        <img :src="indent.shopImg"/>
+        <img :src="indent.shopAvatar"/>
       </div>
       <div class="content-right">
-        <div>下单时间：{{indent.ctime}}</div>
-        <div>数量：{{indent.count}}</div>
-        <div>{{isCancel}}：￥{{indent.fee}}</div>
+        <div>下单时间：{{ctime}}</div>
+        <div>数量：{{indent.num}}</div>
+        <div>{{isCancel}}：￥{{indent.price}}</div>
         <div>
           <div class="card-button">
             <div class="again-btn" v-if="isAgain">再来一单</div>
@@ -24,6 +24,8 @@
 </template>
 
 <script>
+
+import formatDate from "common/utils/formatDate"
   export default {
     props:{
       indent:Object,
@@ -52,7 +54,15 @@
         }else if(this.indent.state === 3){
           return "已退款"
         }
+      },
+      ctime(){
+        return formatDate(this.indent.date,"yyyy-MM-dd hh:mm")
       }
+    },
+    methods:{
+      goto(path) {
+      this.$router.push(path);
+    },
     }
 
   }

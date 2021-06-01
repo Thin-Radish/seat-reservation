@@ -8,14 +8,15 @@
       <contain class="head">
         <div class="avatar">
           <img src="~assets/images/profile/avatar.svg" alt="" />
+          <!-- <img :src="userInfo.avatarUrl" alt="" /> -->
         </div>
         <div class="head-center">
           <div class="name">
-            {{user.name}}
-            <img src="~assets/images/profile/boy.svg"  v-if="user.sex ==='男生'">
+            {{userInfo.name}}
+            <img src="~assets/images/profile/boy.svg"  v-if="userSex.sex ==='男生'">
             <img src="~assets/images/profile/girl.svg"  v-else>
           </div>
-          <div class="vip" v-if="user.identity ==='vip'">正式会员</div>
+          <div class="vip" v-if="userInfo.vip ===1">正式会员</div>
           <div class="general" v-else>普通用户</div>
         </div>
       </contain>
@@ -43,16 +44,17 @@
 
       <contain height="180">
         <div><span>饮食习惯</span><span  class="change" @click="goto('/modhabit')"><img src="~assets/images/profile/change.svg" alt=""></span></div>
-        <van-field label="热爱食品" :value="user.habit.favFood"  readonly />
-        <van-field label="口味偏好" :value="user.habit.flavor"  readonly />
-        <van-field label="忌口食物" :value="user.habit.avoid" readonly />
+        <van-field label="热爱食品" :value="userInfo.habit"  readonly />
+        <van-field label="口味偏好" :value="userInfo.flavor"  readonly />
+        <van-field label="忌口食物" :value="userInfo.avoid" readonly />
         <div></div>
       </contain>
 
       <contain height="263">
         账号管理
-        <van-cell title="我的昵称" is-link :value="user.name" to="/modname"/>
-        <van-cell title="我的性别" :value="user.sex" is-link @click="showPicker = true"/>
+        <van-cell title="我的昵称" is-link :value="userInfo.name" to="/modname"/>
+        <van-cell title="手机绑定" is-link to="/modtel" :value="userInfo.number"/>
+        <van-cell title="我的性别" :value="userInfo.sex" is-link @click="showPicker = true"/>
         <van-popup v-model="showPicker" position="left">
           <van-picker
           title="性别"
@@ -65,7 +67,7 @@
         </van-popup>
         <van-cell title="我的头像" is-link value="修改"/>
         <van-cell title="修改密码" is-link to="/modpwd" value="修改"/>
-        <van-cell title="手机绑定" is-link to="/modtel" value="修改"/>
+        
         <div></div>
       </contain>
   
@@ -80,7 +82,7 @@ import Scroll from "components/common/scroll/Scroll";
 import NavBar from "components/common/navbar/NavBar";
 import Contain from "components/content/container/Contain";
 
-import {setUserInfo} from "api/user"
+import {setUserInfo,getUserInfo} from "api/user"
 import { Toast } from 'vant';
 export default {
   name:'Profile',
@@ -114,7 +116,7 @@ export default {
       showPicker: false,
       columns:['男生','女生'],
       userSex:{
-        sex:'男'
+        sex:''
       },
       user:{
         name:"爱吃饭的瘦萝卜",
@@ -127,10 +129,20 @@ export default {
           flavor:"微辣，多汤",
           avoid:"不要香菜、不要葱"
         }
-      }
+      },
+      userInfo:{},
 
 
     }
+  },
+  created(){
+    getUserInfo(4).then(res=>{
+      console.log(res);
+      this.userInfo = res.data;
+      this.userSex.sex=res.data.sex;
+    }).catch(err=>{
+      console.log(err);
+    })
   }
 };
 </script>
