@@ -1,26 +1,30 @@
 <template>
   <div class="contain">
-      <div class="card-head">
-        <div class="shop-img">
-          <img
-            :src="message.shopImg"
-            alt=""
-          />
-        </div>
-        <div class="shop-title">{{message.shopTitle}}</div>
-        <div class="ctime">{{message.ctime}}</div>
+    <div class="card-head">
+      <div class="shop-img">
+        <img :src="message.shopAvatar" />
       </div>
-      <div class="card-content">
-        您好，欢迎光{{message.shopTitle}}，您预定的位置已为您预留，请问还有什么可以帮助您的吗？
-      </div>
-      
+      <div class="shop-title">{{ message.title }}</div>
+      <div class="ctime">{{ mtime }}</div>
+    </div>
+    <div class="card-content">
+      您好，欢迎光{{
+        message.title
+      }}，您预定的位置已为您预留，请问还有什么可以帮助您的吗？
+    </div>
   </div>
 </template>
 
 <script>
+import formatDate from "common/utils/formatDate"
 export default {
-  props:{
-    message:Object,
+  props: {
+    message: Object,
+  },
+  computed:{
+    mtime(){
+      return formatDate(this.message.mtime,"MM-dd hh:mm")
+    }
   }
 };
 </script>
@@ -66,7 +70,7 @@ export default {
 }
 
 .ctime {
-  width: 60px;
+  width: 70px;
   font-size: 12px;
   line-height: 30px;
   color: rgb(138, 135, 135);
@@ -76,5 +80,4 @@ export default {
   font-size: 13px;
   color: rgb(122, 118, 118);
 }
-
 </style>

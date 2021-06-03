@@ -6,9 +6,9 @@
     <scroll class="content" ref="scroll">
       <div class="top"></div>
       <div
-        v-for="(item, index) in messageAll"
+        v-for="(item, index) in messageList"
         :key="index"
-        @click="goInteract(item.shopTitle)"
+        @click="goInteract(item.title,item.shopId)"
       >
         <van-swipe-cell>
           <msg-card :message="item" />
@@ -31,6 +31,8 @@
 import Scroll from "components/common/scroll/Scroll";
 import NavBar from "components/common/navbar/NavBar";
 import MsgCard from "./childComps/MsgCard";
+
+import { getMessageList } from "api/message";
 export default {
   components: {
     Scroll,
@@ -39,102 +41,33 @@ export default {
   },
   data() {
     return {
-      messageAll: [
-        {
-          shopTitle: "串客·来一手烧烤（福兴中路店子）",
-          shopImg: require("../../assets/images/shop/shop-img/串客·来一手烧烤（福兴中路店子）.jpg"),
-          ctime: "5-5 19:30",
-        },
-        {
-          shopTitle: "昭日料理（万达店）",
-          shopImg: require("../../assets/images/shop/shop-img/昭日料理（万达店）.jpg"),
-          ctime: "5-4 21:20",
-        },
-        {
-          shopTitle: "记亦抄纸巷·油条包麻糍（地下商业街A区店）",
-          shopImg: require("../../assets/images/shop/shop-img/记亦抄纸巷·油条包麻糍（地下商业街A区店）.jpg"),
-          ctime: "5-4 15:20",
-        },
-        {
-          shopTitle: "夫子庙老鸭粉丝馆（城市盒子店）",
-          shopImg: require("../../assets/images/shop/shop-img/夫子庙老鸭粉丝馆（城市盒子店）.jpg"),
-          ctime: "4-25 14:10",
-        },
-        {
-          shopTitle: "乐山自助火锅（天虹店）",
-          shopImg: require("../../assets/images/shop/shop-img/乐山自助火锅（天虹店）.jpg"),
-          ctime: "4-20 12:10",
-        },
-        {
-          shopTitle: "捞缘椰子鸡·猪肚鸡火锅（湘潭万达店）",
-          shopImg: require("../../assets/images/shop/shop-img/捞缘椰子鸡·猪肚鸡火锅（湘潭万达店）.png"),
-          ctime: "4-25 11:10",
-        },
-        {
-          shopTitle: "昭日料理（万达店）",
-          shopImg: require("../../assets/images/shop/shop-img/昭日料理（万达店）.jpg"),
-          ctime: "4-20 10:20",
-        },
-        {
-          shopTitle: "李喜欢手工虾（万达店）",
-          shopImg: require("../../assets/images/shop/shop-img/李喜欢手工虾（万达店）.jpg"),
-          ctime: "4-24 9:10",
-        },
-        {
-          shopTitle: "柒酒烤肉（科大店）",
-          shopImg: require("../../assets/images/shop/shop-img/柒酒烤肉（科大店）.jpg"),
-          ctime: "4-11 11:20",
-        },
-        {
-          shopTitle: "Mr.胡韩式料理",
-          shopImg: require("../../assets/images/shop/shop-img/Mr.胡韩式料理.jpg"),
-          ctime: "4-5 8:20",
-        },
-        {
-          shopTitle: "傣妹火锅（潭城店）",
-          shopImg: require("../../assets/images/shop/shop-img/傣妹火锅（潭城店）.jpg"),
-          ctime: "4-1 13:20",
-        },
-        {
-          shopTitle: "田村长干爆牛蛙（万达店）",
-          shopImg: require("../../assets/images/shop/shop-img/田村长干爆牛蛙（万达店）.jpg"),
-          ctime: "3-20 15:20",
-        },
-        {
-          shopTitle: "索M小串（天虹店）",
-          shopImg: require("../../assets/images/shop/shop-img/索M小串（天虹店）.jpg"),
-          ctime: "3-15 11:20",
-        },
-        {
-          shopTitle: "老福州",
-          shopImg: require("../../assets/images/shop/shop-img/老福州.jpg"),
-          ctime: "3-12 14:30",
-        },
-        {
-          shopTitle: "肖友记卤粉",
-          shopImg: require("../../assets/images/shop/shop-img/肖友记卤粉.jpg"),
-          ctime: "3-10 12:10",
-        },
-        {
-          shopTitle: "花雕醉鸡（湘潭总店）",
-          shopImg: require("../../assets/images/shop/shop-img/花雕醉鸡（湘潭总店）.png"),
-          ctime: "3-5 19:10",
-        },
-        {
-          shopTitle: "蛙来哒（华隆步步高店）",
-          shopImg: require("../../assets/images/shop/shop-img/蛙来哒（华隆步步高店）.jpg"),
-          ctime: "3-2 20:10",
-        },
-      ],
+      messageList: [],
     };
   },
   methods: {
-    goInteract(value) {
-      this.$router.push({ name: "Interact", params: { title: value,isShowImg:true }});
+    goInteract(title,shopId) {
+      this.$router.push({
+        name: "Interact",
+        params: { title,shopId,isShowImg: true },
+      });
+    },
+    getMessageList() {
+      let userId = this.$store.state.userId;
+      getMessageList(userId)
+        .then((res) => {
+          console.log(res);
+          this.messageList = res.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
   activated() {
     this.$refs.scroll.refresh();
+  },
+  mounted() {
+    this.getMessageList();
   },
 };
 </script>

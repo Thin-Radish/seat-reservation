@@ -1,5 +1,5 @@
-import SockJS from "socket.js"
-import Stomp from "stomp.js"
+import SockJS from "sockjs-client"
+import Stomp from "stompjs"
 
 const mutations = {
   //mutations唯一的目的就是修改 state中状态
@@ -24,7 +24,7 @@ const mutations = {
   //websocket初始化
   initWebsocket(state) {
 
-    var url = 'http://localhost:8080/now';
+    var url = 'http://114.55.38.15:15001/now';
     var sock = new SockJS(url);
     state.stomp = Stomp.over(sock);
 
@@ -39,12 +39,13 @@ const mutations = {
       function connectCallback(frame) {
         var tx = state.stomp.begin();
         tx.commit();
-
+        console.log("websocket连接成功");
         
         state.stomp.subscribe("/user/queue/talk", res => {
           var content = res.body;
           var obj = JSON.parse(content);
           console.log(obj.message);
+          state.recMsg = obj.message
         });
 
       },
@@ -56,39 +57,25 @@ const mutations = {
     );
   },
 
-  msgSend(state,message,getter){
+  // msgSend(state,msgInfo){
 
-    var sendMessage ={
-      message:message,
-      getter:getter,
-      sender:state.userId,
-      type: 'message',
-    }
+  //   // var sendMessage ={
+  //   //   message:message,
+  //   //   getter:getter,
+  //   //   sender:state.userId,
+  //   //   type: 'message',
+  //   // }
 
-    state.stomp.send("/app/message/talk", {}, sendMessage);
+  //   msgInfo.sender = state.userId;
+  //   msgInfo.type = 'message';
 
-  }
+  //   msgInfo = JSON.stringify(msgInfo);
 
+  //   state.stomp.send("/app/message/talk", {}, msgInfo);
+
+  // }
 
 }
 
 export default mutations;
 
-
-
-
-
-
-
-    // const wsUrl = 'ws://localhost:3000';
-    // state.ws = new WebSocket(wsUrl);
-
-    // state.ws.onopen = function () {
-    //   console.log("open websocket...");
-    // };
-
-    // //接收服务端消息
-    // state.ws.onmessage = function (msg) {
-    //   state.recMsg = msg;
-
-    // };

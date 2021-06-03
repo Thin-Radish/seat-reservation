@@ -12,10 +12,10 @@ module.exports = {
   },
   devServer: {
     open:true,
-    proxy: { // 配置跨域
+    proxy: { 
       '/api': {
         target: 'http://114.55.38.15:15001', 
-        changOrigin: true, // 允许跨域
+        changOrigin: true,
         pathRewrite: {
           '^/api': ''
         }

@@ -1,5 +1,9 @@
 <template>
-  <div class="find">
+  <div class="find">    
+    <input type="text" v-model="msg1">
+    <button @click="sendMsg(msg1,4)">send1</button>
+    <input type="text" v-model="msg2">
+    <button @click="sendMsg(msg1,1)">send2</button>
     <van-search
       show-action
       label="店铺"
@@ -87,6 +91,8 @@ export default {
 
   data() {
     return {
+      msg1:'',
+      msg2:'',
       postionY:null,
       active: 0,
       isShow:false,
@@ -180,8 +186,8 @@ export default {
     this.shopList=[]; 
     this.getShopInfo(this.shops);
 
-    //连接即时通讯
-    // this.$store.commit('initWebsocket');
+    // 连接即时通讯
+    this.$store.commit('initWebsocket');
   },
 
   mounted(){
@@ -236,6 +242,21 @@ export default {
       if(this.shopList.length){  //预防第一页数据没请求到就执行下拉加载
         this.getShopInfo(this.shops)
       }
+    },
+    sendMsg(message,getter){
+
+      var sendMessage ={
+        message:message,
+        getter:getter,
+        sender:this.$store.state.userId,
+        type: 'message',                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+      }
+
+      sendMessage = JSON.stringify(sendMessage);
+
+      console.log('============================================');
+
+      this.$store.state.stomp.send("/app/message/talk", {}, sendMessage);
     },
 
 

@@ -14,14 +14,14 @@
       </div>
     </nav-bar>
 
-    <scroll class="msg-content"  :probeType="3" ref="scroll" >
+    <scroll class="msg-content" :probeType="3" ref="scroll">
       <div v-for="(item, index) in msgAll" :key="index">
         <inter-card :message="item" />
       </div>
       <div class="botton"></div>
     </scroll>
 
-    <van-field  
+    <van-field
       class="text"
       v-model="message"
       rows="1"
@@ -40,6 +40,8 @@
 import Scroll from "components/common/scroll/Scroll";
 import NavBar from "components/common/navbar/NavBar";
 import InterCard from "./childComps/InterCard";
+
+import { getChatRecord } from "api/message";
 export default {
   name: "Interact",
   components: {
@@ -50,11 +52,11 @@ export default {
   data() {
     return {
       clientHeight: null,
-      isShowImg:true,
+      isShowImg: true,
       title: "",
       message: "",
       msgAll: [
-        { 
+        {
           ctime: "17:18",
           ident: "other",
           icon: require("../../assets/images/shop/shop-img/肖友记卤粉.jpg"),
@@ -101,15 +103,29 @@ export default {
       //   this.$refs.scroll.toBottom();
       // })
 
-      this.$store.state.ws.send(this.message);
-      console.log(this.$store.state.recMsg.data);
+      // this.$store.commit("msgSend", msgInfo);
+      // console.log(this.$store.state.recMsg.data);
+    },
+
+    getChatRecord_() {
+      let userId = this.$store.state.userId;
+      let shopId = this.$route.params.shopId;
+      getChatRecord(userId, shopId)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
 
   created() {
     this.getTitle();
   },
-
+  mounted() {
+    this.getChatRecord_();
+  },
 };
 </script>
 
@@ -135,8 +151,6 @@ export default {
   padding: 5px;
 }
 
-
-
 .msg-content {
   overflow: hidden;
   background: #f2f2f2;
@@ -147,7 +161,7 @@ export default {
   bottom: 50px;
 }
 
-.botton{
+.botton {
   width: 100%;
   height: 20px;
 }
