@@ -1,9 +1,9 @@
 <template>
   <div class="find">    
     <input type="text" v-model="msg1">
-    <button @click="sendMsg(msg1,4)">send1</button>
-    <input type="text" v-model="msg2">
-    <button @click="sendMsg(msg1,1)">send2</button>
+    <button @click="sendMsg(msg1,1)">send1</button>
+    <!-- <input type="text" v-model="msg2">
+    <button @click="sendMsg(msg1,1)">send2</button> -->
     <van-search
       show-action
       label="店铺"

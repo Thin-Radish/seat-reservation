@@ -8,7 +8,7 @@
       <div
         v-for="(item, index) in messageList"
         :key="index"
-        @click="goInteract(item.title,item.shopId)"
+        @click="goInteract(item.title,item.shopId,item.shopAvatar)"
       >
         <van-swipe-cell>
           <msg-card :message="item" />
@@ -45,10 +45,10 @@ export default {
     };
   },
   methods: {
-    goInteract(title,shopId) {
+    goInteract(title,shopId,shopAvatar) {
       this.$router.push({
         name: "Interact",
-        params: { title,shopId,isShowImg: true },
+        params: { title,shopId,shopAvatar,isShowImg: true },
       });
     },
     getMessageList() {

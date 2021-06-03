@@ -56,24 +56,41 @@ export default {
       title: "",
       message: "",
       msgAll: [
-        {
-          ctime: "17:18",
-          ident: "other",
-          icon: require("../../assets/images/shop/shop-img/肖友记卤粉.jpg"),
-          text: "您好，欢迎光临，有什么可以帮助到你的吗？",
-        },
-        {
-          ident: "host",
-          icon: require("../../assets/images/profile/avatar.svg"),
-          text: "您好，我的卤粉不需要香菜，需要多加些汤，并且微辣，麻烦了",
-        },
-        {
-          ident: "other",
-          icon: require("../../assets/images/shop/shop-img/肖友记卤粉.jpg"),
-          text: "好的呢，这就为您准备",
-        },
+        // {
+        //   ctime: "17:18",
+        //   ident: "other",
+        //   icon: require("../../assets/images/shop/shop-img/肖友记卤粉.jpg"),
+        //   text: "您好，欢迎光临，有什么可以帮助到你的吗？",
+        // },
+        // {
+        //   ident: "host",
+        //   icon: require("../../assets/images/profile/avatar.svg"),
+        //   text: "您好，我的卤粉不需要香菜，需要多加些汤，并且微辣，麻烦了",
+        // },
+        // {
+        //   ident: "other",
+        //   icon: require("../../assets/images/shop/shop-img/肖友记卤粉.jpg"),
+        //   text: "好的呢，这就为您准备",
+        // },
       ],
     };
+  },
+  watch:{
+    "$store.state.recMsg":{
+      deep:true,
+      handler: function (newValue, oldValue){
+        let getter = this.$store.state.userId;
+        let sender = this.$route.params.shopId;
+        if(newValue.sender ===getter && newValue.getter === getter){
+          let msgItem ={
+            ident: "host",
+            icon:this.$route.params.shopAvatar,
+            text:newValue.message
+          }
+          this.msgAll.push(msgItem);
+        }
+      }
+    }
   },
   methods: {
     goto(path) {
@@ -89,28 +106,42 @@ export default {
         this.title = "聊天窗口";
       }
     },
+    sendMsg(message,getter){
+
+      var sendMessage ={
+        message:message,
+        getter:getter,
+        sender:this.$store.state.userId,
+        type: 'message',                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+      }
+
+      sendMessage = JSON.stringify(sendMessage);
+
+      console.log('============================================');
+
+      this.$store.state.stomp.send("/app/message/talk", {}, sendMessage);
+    },
     send() {
-      // let msg = {
-      //   ident: "host",
-      //   icon: require("../../assets/images/profile/avatar.svg"),
-      //   text: this.message,
-      // };
-      // this.msgAll.push(msg);
+      let msg = {
+        ident: "host",
+        icon: require("../../assets/images/profile/avatar.svg"),
+        text: this.message,
+      };
+      this.msgAll.push(msg);
       // this.message = "";
 
-      // this.$nextTick(() => {
-      //   this.$refs.scroll.refresh();
-      //   this.$refs.scroll.toBottom();
-      // })
+      this.$nextTick(() => {
+        this.$refs.scroll.refresh();
+        this.$refs.scroll.toBottom();
+      })
 
-      // this.$store.commit("msgSend", msgInfo);
-      // console.log(this.$store.state.recMsg.data);
+      this.sendMsg(this.message,1);
     },
 
     getChatRecord_() {
-      let userId = this.$store.state.userId;
-      let shopId = this.$route.params.shopId;
-      getChatRecord(userId, shopId)
+      let getter = this.$store.state.userId;
+      let sender = this.$route.params.shopId;
+      getChatRecord(getter, sender)
         .then((res) => {
           console.log(res);
         })
