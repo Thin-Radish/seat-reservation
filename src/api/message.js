@@ -17,7 +17,8 @@ export function getChatRecord(getter,sender){
     url: '/message/get',
     params: {
       getter:getter,
-      sender:sender
+      sender:sender,
+      page:0
     }
   })
 }

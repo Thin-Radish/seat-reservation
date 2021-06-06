@@ -79,18 +79,26 @@ export default {
     "$store.state.recMsg":{
       deep:true,
       handler: function (newValue, oldValue){
-        let getter = this.$store.state.userId;
-        let sender = this.$route.params.shopId;
-        if(newValue.sender ===getter && newValue.getter === getter){
+
+        let getter = this.$store.state.userId;  //4
+        // let sender = this.$route.params.shopId; 
+        if(newValue.sender ===1 && newValue.getter === getter){
           let msgItem ={
-            ident: "host",
+            ident: "other",
             icon:this.$route.params.shopAvatar,
             text:newValue.message
           }
           this.msgAll.push(msgItem);
+          this.$nextTick(() => {
+          this.$refs.scroll.refresh();
+          this.$refs.scroll.toBottom();
+      })
         }
       }
     }
+  },
+  computed:{
+    
   },
   methods: {
     goto(path) {
@@ -106,6 +114,31 @@ export default {
         this.title = "聊天窗口";
       }
     },
+    filterMsgData(data){
+      for(let i= data.length-1; i>=0; i--){
+         let getter = this.$store.state.userId; 
+        // let ident = (item.getter === getter)? "host":"other";
+        if(data[i].getter === getter){
+          var ident = "other";
+          var icon = this.$route.params.shopAvatar;
+        }
+        else{
+          var ident = "host";
+          var icon = require("../../assets/images/profile/avatar.svg");
+
+        }
+        let msgItem ={
+          ident:ident,
+          icon:icon,
+          text:data[i].message
+        }
+        this.msgAll.push(msgItem);
+      }
+      this.$nextTick(() => {
+        this.$refs.scroll.refresh();
+        this.$refs.scroll.toBottom();
+      })
+    },
     sendMsg(message,getter){
 
       var sendMessage ={
@@ -116,9 +149,6 @@ export default {
       }
 
       sendMessage = JSON.stringify(sendMessage);
-
-      console.log('============================================');
-
       this.$store.state.stomp.send("/app/message/talk", {}, sendMessage);
     },
     send() {
@@ -134,16 +164,18 @@ export default {
         this.$refs.scroll.refresh();
         this.$refs.scroll.toBottom();
       })
+      let getter = this.$route.params.shopUserId;
 
-      this.sendMsg(this.message,1);
+      this.sendMsg(this.message,getter);
     },
 
     getChatRecord_() {
       let getter = this.$store.state.userId;
-      let sender = this.$route.params.shopId;
-      getChatRecord(getter, sender)
+      let sender = this.$route.params.shopUserId;
+      getChatRecord(getter, shopUserId)
         .then((res) => {
           console.log(res);
+          this.filterMsgData(res.data);
         })
         .catch((err) => {
           console.log(err);

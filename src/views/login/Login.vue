@@ -42,6 +42,10 @@
 <script>
 import {userLogin} from "api/user"
 import { Toast } from 'vant';
+
+// import router from '../../router'
+import userRoute from '../../router/userRoute'
+import shopRoute from '../../router/shopRoute'
 export default {
   data() {
     return {
@@ -56,10 +60,8 @@ export default {
 
       userLogin(values).then(res=>{
         if(res.code === 200){
-          this.$store.commit('commitRole',1);
-          this.$store.commit('commitUserId',res.data.id);
-          // sessionStorage.setItem("role",1);   
-          this.$router.replace("/index");
+          // console.log(res);
+          this.asyncRoute(res.data);
           Toast.success(res.message);
         }else{
           Toast.fail(res.message);
@@ -68,6 +70,20 @@ export default {
       }).catch(err=>{
         console.log(err);
       })
+    },
+    //设置动态路由
+    asyncRoute(info){
+      if(info.role === 1){
+        this.$router.addRoutes(userRoute);
+        this.$store.commit('commitUserId',info.id);
+        this.$router.replace("/index");
+      }else if(info.role === 2){
+        this.$router.addRoutes(shopRoute);
+        this.$router.replace("/merchant");
+        this.$store.commit('commitUserId',info.shopId);
+        
+      }
+      // this.$store.commit('commitRole',1);
     },
 
     validateUsername(val) {
@@ -79,6 +95,8 @@ export default {
     goto(path) {
       this.$router.push(path);
     },
+
+    
   },
 };
 </script>

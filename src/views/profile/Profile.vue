@@ -24,20 +24,16 @@
       <contain>
         <van-grid :column-num="4" :border="false" class="record">
           <van-grid-item to="/collect">
-            <img src="~assets/images/profile/collect.svg" alt="">
-            收藏夹
+            <img src="~assets/images/profile/collect.svg" alt="">收藏夹
           </van-grid-item>
           <van-grid-item to="/footprint"> 
-            <img src="~assets/images/profile/record.svg" alt="">
-            历史记录
+            <img src="~assets/images/profile/record.svg" alt="">历史记录
           </van-grid-item>
           <van-grid-item>
-            <img src="~assets/images/profile/register.svg" alt="">
-            签到
+            <img src="~assets/images/profile/register.svg" alt="">签到
           </van-grid-item>
           <van-grid-item>
-            <img src="~assets/images/profile/wallet.svg" alt="">
-            钱包
+            <img src="~assets/images/profile/wallet.svg" alt="">钱包
           </van-grid-item>
         </van-grid>
       </contain>
@@ -109,6 +105,16 @@ export default {
       }).catch(err=>{
         console.log(err);
       })
+    },
+    getUserInfo_(){
+      let userId = this.$store.state.userId;
+      getUserInfo(userId).then(res=>{
+        console.log(res);
+        this.userInfo = res.data;
+        this.userSex.sex=res.data.sex;
+      }).catch(err=>{
+        console.log(err);
+      })
     }
   },
   data(){
@@ -118,31 +124,25 @@ export default {
       userSex:{
         sex:''
       },
-      user:{
-        name:"爱吃饭的瘦萝卜",
-        sex:"男生",
-        identity:"vip", //general
-        avatar:"~assets/images/profile/avatar.svg",
-        tel:"18973835153",
-        habit:{
-          favFood:"鸡肉、牛肉",
-          flavor:"微辣，多汤",
-          avoid:"不要香菜、不要葱"
-        }
-      },
+      // user:{
+      //   name:"爱吃饭的瘦萝卜",
+      //   sex:"男生",
+      //   identity:"vip", //general
+      //   avatar:"~assets/images/profile/avatar.svg",
+      //   tel:"18973835153",
+      //   habit:{
+      //     favFood:"鸡肉、牛肉",
+      //     flavor:"微辣，多汤",
+      //     avoid:"不要香菜、不要葱"
+      //   }
+      // },
       userInfo:{},
 
 
     }
   },
-  created(){
-    getUserInfo(4).then(res=>{
-      console.log(res);
-      this.userInfo = res.data;
-      this.userSex.sex=res.data.sex;
-    }).catch(err=>{
-      console.log(err);
-    })
+  mounted(){
+    this.getUserInfo_();
   }
 };
 </script>

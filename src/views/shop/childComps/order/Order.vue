@@ -198,7 +198,7 @@ export default {
     }
   },
   created(){
-    getDishList(1).then(res=>{
+    getDishList(2).then(res=>{
       this.getDishType(res.data)
       this.foodList = res.data;
     }).catch(err=>{

@@ -1,6 +1,10 @@
 <template>
-  <div class="contain">
+  <div
+    class="contain"
+    @click="goInteract(message.title, message.shopUserId, message.shopAvatar)"
+  >
     <div class="card-head">
+      <div class="dot" v-if="isRead"></div>
       <div class="shop-img">
         <img :src="message.shopAvatar" />
       </div>
@@ -16,16 +20,29 @@
 </template>
 
 <script>
-import formatDate from "common/utils/formatDate"
+import formatDate from "common/utils/formatDate";
 export default {
   props: {
     message: Object,
   },
-  computed:{
-    mtime(){
-      return formatDate(this.message.mtime,"MM-dd hh:mm")
-    }
-  }
+  computed: {
+    mtime() {
+      return formatDate(this.message.mtime, "MM-dd hh:mm");
+    },
+  },
+  data() {
+    return {
+      isRead: true,
+    };
+  },
+  methods: {
+    goInteract(title, shopUserId, shopAvatar) {
+      this.$router.push({
+        name: "Interact",
+        params: { title, shopUserId, shopAvatar, isShowImg: true },
+      });
+    },
+  },
 };
 </script>
 
@@ -34,12 +51,21 @@ export default {
   width: 96%;
 
   background: #fff;
-
   border-radius: 10px;
   margin: 0px auto;
   margin-bottom: 8px;
   padding: 15px;
   box-sizing: border-box;
+}
+.dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #ee0a24;
+
+  position: absolute;
+  right: 18px;
+  top: 8px;
 }
 .card-head {
   height: 40px;

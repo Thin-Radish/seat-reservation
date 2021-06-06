@@ -41,12 +41,12 @@ export default {
   data() {
     return {
       dish:{
-        shopId:1,
+        shopId:3,
         monSell:null,
         foodName: "",
         foodLabel: "",
         foodPrice:null,  
-        foodType:"",
+        foodType:"必点配菜",
       },
       fileList: [],
       formData: new FormData(),

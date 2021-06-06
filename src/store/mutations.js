@@ -44,7 +44,7 @@ const mutations = {
         state.stomp.subscribe("/user/queue/talk", res => {
           var content = res.body;
           var msgObj = JSON.parse(content);
-          // console.log(msgObj);
+          console.log(msgObj);
           // console.log(msgObj.message);
           state.recMsg = msgObj;
         });
