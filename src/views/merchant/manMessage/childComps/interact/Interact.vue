@@ -62,13 +62,12 @@ export default {
     "$store.state.recMsg":{
       deep:true,
       handler: function (newValue, oldValue){
-
-        let getter = this.$store.state.userId;  //4
-        // let sender = this.$route.params.shopId; 
-        if(newValue.sender ===1 && newValue.getter === getter){
+        console.log('sender'+this.userId);
+        console.log('getter'+this.shopUserId);
+        if(newValue.sender ===this.userId && newValue.getter === this.shopUserId){
           let msgItem ={
             ident: "other",
-            icon:this.$route.params.shopAvatar,
+            icon:this.userAvatar,
             text:newValue.message
           }
           this.msgAll.push(msgItem);
@@ -81,7 +80,18 @@ export default {
     }
   },
   computed:{
-    
+    shopAvatar(){
+      return this.$route.params.message.shopAvatar;
+    },
+    userAvatar(){
+      return this.$route.params.message.userAvatar;
+    },
+    userId(){
+      return this.$route.params.message.userId;
+    },
+    shopUserId(){
+      return this.$store.state.userId;
+    }
   },
   methods: {
     goto(path) {

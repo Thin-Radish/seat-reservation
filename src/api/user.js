@@ -51,9 +51,7 @@ export function getAvatar(avatarFile){
   return request({
     method: 'post',
     url:'/user/setAvatar',
-    data:qs.stringify({
-      file:avatarFile
-    })
+    data:avatarFile
   })
 }
 

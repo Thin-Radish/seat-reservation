@@ -101,7 +101,7 @@ export default {
   },
   data() {
     return {
-      time:"2020-05-25 10:30",
+      time:"",
       showPicker: false,
       text: "",
       seatList: null,
@@ -119,7 +119,7 @@ export default {
     },
     currDay(){
       var time = new Date();
-      return time.getFullYear()+'-'+time.getMonth()+'-'+time.getDate();
+      return time.getFullYear()+'-'+(time.getMonth()+1)+'-'+time.getDate();
     },
     currHours(){
       return new Date().getHours();
@@ -208,7 +208,12 @@ export default {
         price:this.totalMoney,
       }
       createIndent(indent).then(res=>{
-        console.log(res);
+        if(res.code === 200){
+          this.$router.replace("/find");
+          this.$toast.success(res.message);
+        }else{
+          this.$toast.fail(res.message);
+        }
       }).catch(err=>{
         console.log(err);
       })

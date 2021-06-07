@@ -17,6 +17,7 @@
               text="删除"
               type="danger"
               class="delete-button"
+              @click="delMsg(item.id,index)"
             />
           </template>
         </van-swipe-cell>
@@ -31,7 +32,7 @@ import Scroll from "components/common/scroll/Scroll";
 import NavBar from "components/common/navbar/NavBar";
 import MsgCard from "./childComps/MsgCard";
 
-import { getMessageList } from "api/message";
+import { getMessageList,delMessage } from "api/message";
 export default {
   name:"Message",
   components: {
@@ -59,6 +60,17 @@ export default {
         this.$refs.scroll.refresh();
       })
     },
+    delMsg(msgId,index){
+      console.log(msgId);
+      console.log(index);
+      
+      delMessage(msgId).then(res=>{
+        console.log(res);
+        if(res.code === 200){
+          this.messageList.splice(index,1);
+        }
+      })
+    }
     
   },
   activated() {

@@ -72,7 +72,7 @@
           <div @click="goto('/seatmap')">位置分布</div>
           <div @click="goto('/setinfo')"> 信息编辑</div>
         </div>
-        <div class="quit"  >退出登录</div>
+        <div class="quit" @click="signOut()" >退出登录</div>
       </div>
     </scroll>
   </div>
@@ -111,6 +111,9 @@ export default {
     },
     toDetial() {
       this.$router.replace("detial");
+    },
+    signOut(){
+      this.$router.replace('/login');
     },
   },
   created() {

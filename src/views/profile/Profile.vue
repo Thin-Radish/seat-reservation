@@ -7,8 +7,7 @@
       <div class="split"></div>
       <contain class="head">
         <div class="avatar">
-          <img src="~assets/images/profile/avatar.svg" alt="" />
-          <!-- <img :src="userInfo.avatarUrl" alt="" /> -->
+          <img :src="userInfo.avatarUrl" alt="" />
         </div>
         <div class="head-center">
           <div class="name">
@@ -67,7 +66,7 @@
         <div></div>
       </contain>
   
-      <div class="quit">退出登录</div>
+      <div class="quit" @click="signOut()">退出登录</div>
       <div class="bottom"></div>
     </scroll>
   </div>
@@ -90,6 +89,9 @@ export default {
   methods:{
     goto(path) {
       this.$router.push(path);
+    },
+    signOut(){
+      this.$router.replace('/login');
     },
 
     //设置性别
@@ -124,21 +126,7 @@ export default {
       userSex:{
         sex:''
       },
-      // user:{
-      //   name:"爱吃饭的瘦萝卜",
-      //   sex:"男生",
-      //   identity:"vip", //general
-      //   avatar:"~assets/images/profile/avatar.svg",
-      //   tel:"18973835153",
-      //   habit:{
-      //     favFood:"鸡肉、牛肉",
-      //     flavor:"微辣，多汤",
-      //     avoid:"不要香菜、不要葱"
-      //   }
-      // },
       userInfo:{},
-
-
     }
   },
   mounted(){

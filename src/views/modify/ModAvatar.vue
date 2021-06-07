@@ -50,7 +50,12 @@ export default {
     commit() {
       getAvatar(this.formData)
         .then((res) => {
-          console.log(res);
+          if(res.code === 200){
+            this.$router.replace("/profile");
+            this.$toast.success(res.message);
+          }else{
+            this.$toast.fail(res.message);
+          }
         })
         .catch((err) => {
           console.log(err);

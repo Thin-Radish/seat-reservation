@@ -63,9 +63,9 @@ export default {
       deep:true,
       handler: function (newValue, oldValue){
 
-        let getter = this.$store.state.userId;  //4
+        // let getter = this.$store.state.userId;  //4
         // let sender = this.$route.params.shopId; 
-        if(newValue.sender ===1 && newValue.getter === getter){
+        if(newValue.sender ===this.shopUserId && newValue.getter === this.userId){
           let msgItem ={
             ident: "other",
             icon:this.$route.params.message.shopAvatar,

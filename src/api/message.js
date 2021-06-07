@@ -34,5 +34,18 @@ export function getChatRecord(getter,sender){
   })
 }
 
+export function delMessage(msgId){
+  return request({
+    method: 'post',
+    url: '/message/updateList',
+    data: {
+      id:msgId,
+      visible:0,
+    }
+  })
+}
+
+
+
 
 
