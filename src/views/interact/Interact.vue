@@ -63,8 +63,6 @@ export default {
       deep:true,
       handler: function (newValue, oldValue){
 
-        // let getter = this.$store.state.userId;  //4
-        // let sender = this.$route.params.shopId; 
         if(newValue.sender ===this.shopUserId && newValue.getter === this.userId){
           let msgItem ={
             ident: "other",
@@ -73,9 +71,9 @@ export default {
           }
           this.msgAll.push(msgItem);
           this.$nextTick(() => {
-          this.$refs.scroll.refresh();
-          this.$refs.scroll.toBottom();
-      })
+            this.$refs.scroll.refresh();
+            this.$refs.scroll.toBottom();
+          })
         }
       }
     }
@@ -131,14 +129,16 @@ export default {
         this.$refs.scroll.toBottom();
       })
     },
-    sendMsg(message){
+    sendMsg(){
 
       var sendMessage ={
-        message:message,
+        message:this.message,
         getter:this.shopUserId,
         sender:this.userId,
         type: 'message',                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
       }
+
+      this.message = "";
 
       sendMessage = JSON.stringify(sendMessage);
       this.$store.state.stomp.send("/app/message/talk", {}, sendMessage);
@@ -150,13 +150,11 @@ export default {
         text: this.message,
       };
       this.msgAll.push(msg);
-      // this.message = "";
-
       this.$nextTick(() => {
         this.$refs.scroll.refresh();
         this.$refs.scroll.toBottom();
       })
-      this.sendMsg(this.message);
+      this.sendMsg();
     },
 
     getChatRecord_() {

@@ -111,7 +111,6 @@ export default {
     getUserInfo_(){
       let userId = this.$store.state.userId;
       getUserInfo(userId).then(res=>{
-        console.log(res);
         this.userInfo = res.data;
         this.userSex.sex=res.data.sex;
       }).catch(err=>{

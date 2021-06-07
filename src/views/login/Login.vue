@@ -85,6 +85,7 @@ export default {
         
       }
       this.$store.commit('commitUserId',info.id);
+      this.$store.commit('commitShopId',info.shopId);
       this.$store.commit('commitRole',info.role);
     },
 

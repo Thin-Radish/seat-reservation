@@ -1,5 +1,5 @@
 import { request } from '../common/utils/request'
-
+const qs = require('qs')
 
 export function getMessageList(userId){
   return request({
@@ -38,10 +38,10 @@ export function delMessage(msgId){
   return request({
     method: 'post',
     url: '/message/updateList',
-    data: {
+    data: qs.stringify({
       id:msgId,
       visible:0,
-    }
+    })
   })
 }
 

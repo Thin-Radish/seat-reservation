@@ -108,23 +108,23 @@ export default {
 
       //上传至vuex
       this.$store.commit('commitSellerInfo',this.sellerInfo)
+    },
+    getShopById_(){
+      let shopId = this.$route.query.id
+      getShopById(shopId).then(res=>{
+        this.shopInfo = res.data;
+      }).catch(err=>{
+        console.log(err);
+      })
     }
   },
   created() {
     // 先初始化vuex中的订单数据
     this.$store.commit('commitSeatList',[]);
 
-    let shopId = this.$route.query.id
-    getShopById(shopId).then(res=>{
-      this.shopInfo = res.data;
-    }).catch(err=>{
-      console.log(err);
-    })
+    this.getShopById_();
   },
-  beforeDestroy(){
 
-    
-  },
 
   
 };

@@ -16,6 +16,9 @@ const mutations = {
   commitUserId(state, paylod) {
     state.userId = paylod;
   },
+  commitShopId(state, paylod) {
+    state.shopId = paylod;
+  },
   commitSellerInfo(state, paylod) {
     state.sellerInfo = paylod;
   },
@@ -44,7 +47,7 @@ const mutations = {
         state.stomp.subscribe("/user/queue/talk", res => {
           var content = res.body;
           var msgObj = JSON.parse(content);
-          console.log(msgObj);
+          // console.log(msgObj);
           // console.log(msgObj.message);
           state.recMsg = msgObj;
         });    

@@ -6,8 +6,7 @@
        <van-tabbar-item icon="orders-o" to="indent" name="/merchant/indent">订单</van-tabbar-item>
       <van-tabbar-item icon="shop-o" to="shop" name="/merchant/shop">店铺</van-tabbar-item>
     </van-tabbar>    
-
-    <router-view/>
+      <router-view/>
   </div>
 </template>
 

@@ -65,6 +65,7 @@ export default {
         console.log('sender'+this.userId);
         console.log('getter'+this.shopUserId);
         if(newValue.sender ===this.userId && newValue.getter === this.shopUserId){
+          console.log(123);
           let msgItem ={
             ident: "other",
             icon:this.userAvatar,
@@ -139,6 +140,8 @@ export default {
         sender:this.$store.state.userId,
         type: 'message',                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
       }
+
+      this.message = "";
 
       sendMessage = JSON.stringify(sendMessage);
       this.$store.state.stomp.send("/app/message/talk", {}, sendMessage);

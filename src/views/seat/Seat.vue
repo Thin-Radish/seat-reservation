@@ -139,7 +139,7 @@ export default {
   mounted() {
     this.seatList = this.$store.state.seatList;
     getSeatMap(this.$route.query.id).then(res=>{
-      console.log(res.data);
+      // console.log(res.data);
       this.layout = res.data
     }).catch(err=>{
       console.log(err);

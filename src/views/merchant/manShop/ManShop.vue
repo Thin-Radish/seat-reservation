@@ -3,26 +3,25 @@
     <nav-bar>
       <div slot="center">店铺设置</div>
     </nav-bar>
-    <scroll class="content">
+    <scroll class="content" ref="scroll" >
       <div class="hotel">
-        <img src="~assets/images/shop/shop-img/CoCo.jpg" alt="" class="hotel-img" />
+        <img :src="shopInfo.sampleGraphUrl" class="hotel-img" />
 
         <div class="hotel-info">
             <img
-              src="~assets/images/shop/shop-img/CoCo.jpg"
-              alt=""
+              :src="shopInfo.shopAvatarUrl"
               class="hotel-icon"
             />
-            <span class="title">卤味饭·热干面</span>
+            <span class="title">{{shopInfo.title}}</span>
 
             <div>
               <div class="hot">
                 <img src="~assets/images/star.svg" alt="" />
-                <span>4.8 </span>
-                <span mon-sell>月售：564</span>
+                <span>{{shopInfo.star}} </span>
+                <span mon-sell>月售：{{shopInfo.monSell}}</span>
               </div>
-              <div class="label">湘潭川菜好评榜第1名</div>
-              <div class="re-seat">座位剩余：18/10</div>
+              <div class="label">{{shopInfo.label}}</div>
+              <div class="re-seat">座位剩余：{{shopInfo.remSeat}}/{{shopInfo.totalSeat}}</div>
               <div class="welcome">
                 <img src="~assets/images/speaker.svg" alt="" />
                 欢迎光临，很高兴为您服务
@@ -35,7 +34,7 @@
             <div class="addre-left">
               <img src="~assets/images/seller/address.png" alt="" />
             </div>
-            <div class="addre-text">湖南省湘潭市岳塘区湖南工程学院后街黄焖鸡</div>
+            <div class="addre-text">{{shopInfo.local}}</div>
             <div class="addre-right">
               <img src="~assets/images/seller/phone.png" alt="" />
             </div>
@@ -85,7 +84,7 @@ import Scroll from "components/common/scroll/Scroll";
 import Split from "components/content/split/Split";
 import BScroll from "better-scroll";
 
-
+import { getShopById } from "api/shop";
 export default {
   name: "Shop",
   components: {
@@ -96,12 +95,8 @@ export default {
   },
   data() {
     return {
-      swipeImg: [
-        require("assets/images/seller/shop-img-1.jpg"),
-        require("assets/images/seller/shop-img-2.jpg"),
-        require("assets/images/seller/shop-img-3.jpg"),
-        require("assets/images/seller/shop-img-4.jpg"),
-      ],
+      swipeImg: [],
+      shopInfo:{},
     };
   },
 
@@ -115,21 +110,33 @@ export default {
     signOut(){
       this.$router.replace('/login');
     },
-  },
-  created() {
-    // 连接即时通讯
-    this.$store.commit('initWebsocket');
-
-    this.$nextTick(() => {
-      let imgW = this.$refs.picsItem[0].clientWidth;
-      let marginR = 11;
-      let width = (imgW + marginR) * this.swipeImg.length;
-      this.$refs.picsList.style.width = width + "px";
-      this.scroll = new BScroll(this.$refs.picsView, {
-        scrollX: true,
+    setScroll(){
+      this.$nextTick(() => {
+        let imgW = this.$refs.picsItem[0].clientWidth;
+        let marginR = 11;
+        let width = (imgW + marginR) * this.swipeImg.length;
+        this.$refs.picsList.style.width = width + "px";
+        this.scroll = new BScroll(this.$refs.picsView, {
+          scrollX: true,
+        });
+        this.$refs.scroll.refresh();
       });
-    });
+    },
+    getShopById_(){
+      let shopId = this.$store.state.shopId;
+      getShopById(shopId).then(res=>{
+        this.shopInfo = res.data;
+        this.swipeImg = res.data.imageUrls;
+        this.setScroll();
+      }).catch(err=>{
+        console.log(err);
+      })
+    }
   },
+
+  mounted(){
+    this.getShopById_();
+  }
 
 };
 </script>
@@ -208,6 +215,7 @@ export default {
   width: 100%;
   height: 130px;
   margin-bottom: 2px;
+  transform: translateY(-15px);
 }
 
 .location {

@@ -1,5 +1,6 @@
 <template>
   <div class="find">    
+    <!-- 搜索框 -->
     <van-search
       show-action
       label="店铺"
@@ -12,13 +13,15 @@
       </template>
     </van-search>
 
-
+    <!-- 滚动区域 -->
     <scroll class="content" 
             @scroll="navScroll" 
             :probeType="3" 
             ref="scroll"
             :pull-up-load="true"
             @pullingUp="loadMore">
+
+      <!-- 轮播图 -->
       <van-swipe class="my-swipe"
                 :autoplay="3000"
                 indicator-color="white"
@@ -27,6 +30,8 @@
           <img :src="image" alt="" />
         </van-swipe-item>
       </van-swipe>
+
+      <!-- 店铺分类 -->
       <van-grid :column-num="4" :border="false" class="category-icon">
         <van-grid-item v-for="(icon, index) in categoryIcon" :key="index" @click="goto('/category/' +icon.type)">
           <img :src="icon.url" />
@@ -34,12 +39,14 @@
         </van-grid-item>
       </van-grid>
 
+      <!-- 推荐的店铺 -->
       <recommend>
         <div v-for="(item, index) in recomData" :key="index" >
           <recom-item :recomData="item" />
         </div>
       </recommend>
 
+      <!-- 店铺列表 -->
       <div class="variety">
         <div class="title">附近商家</div>
         <tab-control 
@@ -47,13 +54,12 @@
           @tabClick="tabClick"
           ref="tabControl_1" />
       </div>
-     
-
       <div v-for="(item, index) in shopList" :key="index" >
         <shop-card :shopData="item" />
       </div>
     </scroll>
 
+    <!-- scroll克隆 -->
     <div class="copy-variety" v-show="isShow">
         <div class="title">附近商家</div>
         <tab-control 
@@ -65,15 +71,19 @@
 </template>
 
 <script>
+// 公共组件
 import Scroll from "components/common/scroll/Scroll";
 import TabControl from "components/content/tabControl/TabControl";
 
+//子组件
 import Recommend from "views/find/childComps/recommend/Recommend";
 import RecomItem from "views/find/childComps/recommend/RecomItem";
-
 import ShopCard from "views/find/childComps/shopCard/ShopCard.vue";
 
+//接口调用
 import { getShopAll } from "api/shop";
+
+//工具函数
 import debounce from 'common/utils/debounce'
 export default {
   name:"Find",
@@ -183,13 +193,10 @@ export default {
     };
   },
   created(){
+
     //店铺数据请求
-    // todo
     this.shopList=[]; 
     this.getShopInfo(this.shops);
-
-    // 连接即时通讯
-    this.$store.commit('initWebsocket');
   },
 
   mounted(){

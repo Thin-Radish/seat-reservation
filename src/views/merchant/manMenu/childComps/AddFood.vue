@@ -8,7 +8,7 @@
     </nav-bar>
 
     <div class="habits">
-      <van-field label="月出售" v-model.number="dish.monSell" type="number"/>
+      <!-- <van-field label="月出售" v-model.number="dish.monSell" type="number"/> -->
       <van-field label="菜品名称" v-model="dish.foodName" />
       <van-field label="菜品描述" v-model="dish.foodLabel" />
       <van-field label="菜品价格" v-model.number="dish.foodPrice" type="number" />
@@ -41,16 +41,20 @@ export default {
   data() {
     return {
       dish:{
-        shopId:3,
-        monSell:null,
+        shopId:2,
+        monSell:89,
         foodName: "",
         foodLabel: "",
         foodPrice:null,  
-        foodType:"必点配菜",
+        foodType:"",
       },
       fileList: [],
       formData: new FormData(),
     };
+  },
+  created(){
+    this.dish.foodType = this.$route.query.sort;
+    // console.log(this.$route.query.sort);
   },
   methods: {
     goBack(path) {
@@ -69,16 +73,18 @@ export default {
       this.formData.append("type", this.dish.foodType);
     },
     commit(){
-
       this.appendData();
       addFood(this.formData).then(res=>{
-        console.log(res);
+        if(res.code === 200){
+          this.$toast.success(res.message);
+          this.$router.replace("/merchant/menu");
+        }else{
+          this.$toast.fail(res.message);
+        }
       }).catch(err=>{
         console.log(err);
       })
-
     }
-    
   },
 };
 </script>

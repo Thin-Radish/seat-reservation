@@ -21,7 +21,7 @@
           plain
           class="add-food"
           color="#34495e"
-          @click="goto('/addfood')"
+          @click="goAddFood()"
           >+添加菜品</van-button
         >
         <div v-for="(item, index) in foodList[activeKey]" :key="index">
@@ -60,14 +60,16 @@ export default {
   data() {
     return {
       activeKey: 0,
-      sort: ["进店必买", "双拼卤饭", "卤菜小吃", "热干面", "手工粉"],
       dishSort: [],
       foodList: [],
     };
   },
   methods: {
-    goto(path) {
-      this.$router.push(path);
+    goAddFood() {
+      this.$router.push({
+        path:'/addfood',
+        query:{sort:this.dishSort[this.activeKey]}
+      });
     },
     getDishType(data) {
       for (let i = 0; i < data.length; i++) {

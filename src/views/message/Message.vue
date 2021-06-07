@@ -50,7 +50,7 @@ export default {
       let userId = this.$store.state.userId;
       getMessageList(userId)
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           this.messageList = res.data;
         })
         .catch((err) => {
@@ -75,6 +75,10 @@ export default {
   },
   activated() {
     this.$refs.scroll.refresh();
+  },
+  created(){
+     // 连接即时通讯
+    this.$store.commit('initWebsocket');
   },
   mounted() {
     this.getMessageList_();

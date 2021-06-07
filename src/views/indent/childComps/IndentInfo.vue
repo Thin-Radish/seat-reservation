@@ -139,7 +139,6 @@ export default {
       let indentId = this.$route.query.id;
       getIndentById(indentId)
       .then((res) => {
-        console.log(res);
         this.indentInfo = res.data;
       })
       .catch((err) => {

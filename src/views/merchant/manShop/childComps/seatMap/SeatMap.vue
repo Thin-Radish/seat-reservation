@@ -54,9 +54,9 @@
       </grid-layout>
     </div>
     <div class="eidt">
-      <div class="modMap">修改</div>
-      <input type="text" v-model.number="shopId">
-      <div class="saveMap" @click="saveMap">保存</div>
+      <div class="modMap" @click="modMap()">修改</div>
+      <!-- <input type="text" v-model.number="shopId"> -->
+      <div class="saveMap" @click="saveMap()">保存</div>
     </div>
     <div class="sele-seat">
       <div class="item">
@@ -96,7 +96,7 @@ import Door from "components/content/tables/Door.vue";
 
 import NavBar from "components/common/navbar/NavBar";
 
-import {setSeatMap} from "api/seat"
+import {getSeatMap,setSeatMap} from "api/seat"
 
 const axios = require('axios');
 export default {
@@ -113,12 +113,7 @@ export default {
   },
   data() { 
     return {
-      isdraggable:true,
-      // tableType:[
-      //   { x:9,y:9,w:2,h:3,i:0,type:"twoTable",isRotate:false,state:[0,0] },
-      //   { x:9,y:9,w:3,h:3,i:0,type:"fourTable",isRotate:false,state:[0,0,0,0] },
-      //   { x:9,y:9,w:4,h:3,i:0,type:"sixTable",isRotate:false,state:[0,0,0,0,0,0]}
-      // ],
+      isdraggable:false,
       layout: [
         // { x: 0, y: 0, w: 2, h: 3, i: "0", type: "twoTable",isRotate:true,state:[0,0]  },
         // { x: 0, y: 3, w: 4, h: 3, i: "1", type: "sixTable",isRotate:false,state:[0,0,0,0,0,0]  },
@@ -134,9 +129,13 @@ export default {
         // { x: 6, y: 11, w: 6, h: 2, i: "9", type: "checkout", isCol: false },
         // { x: 0, y: 13, w: 4, h: 1, i: "10", type: "door", isCol: false },
       ],
-      shopId:2,
       
     };
+  },
+  computed:{
+    shopId(){
+      return this.$store.state.shopId;
+    }
   },
 
   methods: {
@@ -145,6 +144,7 @@ export default {
     },
     modMap(){
       this.isdraggable = true;
+      this.layout = [];
     },
     saveMap(){
       this.isdraggable = false;
@@ -167,23 +167,28 @@ export default {
       }
       this.layout.push(table);
     },
+    getSeatMap_(){
+      console.log(this.shopId);
+      getSeatMap(this.shopId).then(res=>{
+        this.layout = res.data;
+      })
+    },
     saveMap(){
       console.log(this.shopId);
       let table = this.layout;
 
       setSeatMap(table).then(res=>{
-        console.log(res);
+        if(res.code === 200){
+          this.$toast.success(res.message);
+          this.$router.replace("/merchant");
+        }else{
+            this.$toast.fail(res.message);
+        }
       }).catch(err=>{
         console.log(err);
       })
       
     }
-
-
-
-
-
-
   },
   mounted(){
     this.$bus.$on('delTable',index=>{
@@ -194,6 +199,8 @@ export default {
         this.layout[i].i = i;
       }
     })
+
+    this.getSeatMap_();
   }
 
 };

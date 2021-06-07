@@ -16,7 +16,6 @@
         v-for="(item, index) in showIndent"
         :key="index"
         :indent="item"
-        @click.native="goto('/indentinfo')"
       />
       <div class="botton"></div>
     </scroll>

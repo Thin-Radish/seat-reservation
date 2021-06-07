@@ -98,7 +98,6 @@ export default {
     getIndentAll()
       .then((res) => {
         this.indentAll = this.indentAll.concat(res.data).reverse();
-        console.log(this.indentAll);
       })
       .catch((err) => {
         console.log(err);

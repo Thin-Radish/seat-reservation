@@ -5,6 +5,7 @@ const state = {
   index:0,
   userRole:0,
   userId:null,
+  shopId:null,
   sellerInfo:{},
   routes:[],
 

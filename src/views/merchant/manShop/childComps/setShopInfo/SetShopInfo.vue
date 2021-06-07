@@ -13,7 +13,11 @@
       <van-field label="店铺热线" v-model="shopInfo.phoneNum" />
       <van-field label="店铺地址" v-model="shopInfo.local" />
       <van-field label="营业时间" v-model="shopInfo.openTime" />
-      <van-field label="店铺分类" v-model="shopInfo.classify" @click="showPicker = true"/>
+      <van-field
+        label="店铺分类"
+        v-model="shopInfo.classify"
+        @click="showPicker = true"
+      />
       <van-popup v-model="showPicker" position="top">
         <van-picker
           title="店铺分类"
@@ -47,7 +51,7 @@
 import NavBar from "components/common/navbar/NavBar";
 import ComButton from "components/common/button/ComButton";
 
-import { uploadShopImg, setShopInfo } from "api/shop";
+import { uploadShopImg, updateShopInfo } from "api/shop";
 export default {
   components: {
     NavBar,
@@ -55,15 +59,24 @@ export default {
   },
   data() {
     return {
-      columns: ["海鲜", "火锅", "甜品饮料", "烧烤烤肉", "西餐", "香锅烤鱼", "小吃快餐", "自助餐"],
-      showPicker:false,
+      columns: [
+        "海鲜",
+        "火锅",
+        "甜品饮料",
+        "烧烤烤肉",
+        "西餐",
+        "香锅烤鱼",
+        "小吃快餐",
+        "自助餐",
+      ],
+      showPicker: false,
       shopInfo: {
         // shopId: 20,
         title: "",
-        openTime: "9:30-14:30;16:30-21:30",
-        phoneNum: "18973835153",
+        openTime: "",
+        phoneNum: "",
         local: "",
-        classify: "烧烤烤肉",
+        classify: "",
         label: "",
         shopAvatar: null,
         sampleGraph: null,
@@ -77,13 +90,31 @@ export default {
     goBack(path) {
       this.$router.go(-1);
     },
-    onConfirm(value){
+    onConfirm(value) {
       this.shopInfo.classify = value;
       this.showPicker = false;
     },
 
     afterRead(file) {
       this.formData.append("image", file.file);
+    },
+    updateShopInfo_() {
+      this.shopInfo.userId = this.$store.state.userId;
+      this.shopInfo.id = this.$store.state.shopId;
+      console.log(this.shopInfo);
+      updateShopInfo(this.shopInfo)
+        .then((res) => {
+          console.log(res);
+          if (res.code === 200) {
+            this.$toast.success(res.message);
+            this.$router.replace("/merchant");
+          } else {
+            this.$toast.fail(res.message);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     commit() {
       uploadShopImg(this.formData)
@@ -94,15 +125,8 @@ export default {
             this.shopInfo.sampleGraph = res.data[0];
             let imgList = res.data.slice(1);
             this.shopInfo.fileId = JSON.stringify(imgList);
-
-            setShopInfo(this.shopInfo)
-              .then((res) => {
-                console.log(res);
-              })
-              .catch((err) => {
-                console.log(err);
-              });
           }
+          this.updateShopInfo_();
         })
         .catch((err) => {
           console.log(err);
