@@ -1,14 +1,15 @@
 <template>
-  <div class="contain">
+  <div class="contain"
+       @click="goInteract()">
       <div class="card-head">
         <div class="shop-img">
           <img
-            :src="message.shopImg"
+            :src="message.userAvatar"
             alt=""
           />
         </div>
-        <div class="shop-title">{{message.shopTitle}}</div>
-        <div class="ctime">{{message.ctime}}</div>
+        <div class="shop-title">{{message.userName}}</div>
+        <div class="ctime">{{mtime}}</div>
       </div>
       <div class="card-content">
         您有一条信息，请尽快查看...
@@ -18,10 +19,24 @@
 </template>
 
 <script>
+import formatDate from "common/utils/formatDate";
 export default {
   props:{
     message:Object,
-  }
+  },
+  computed: {
+    mtime() {
+      return formatDate(this.message.mtime, "MM-dd hh:mm");
+    },
+  },
+  methods: {
+    goInteract() {
+      this.$router.push({
+        name: "ManInteract",
+        params: { message:this.message, isShowImg: false },
+      });
+    },
+  },
 };
 </script>
 
@@ -66,7 +81,7 @@ export default {
 }
 
 .ctime {
-  width: 60px;
+  width: 70px;
   font-size: 12px;
   line-height: 30px;
   color: rgb(138, 135, 135);

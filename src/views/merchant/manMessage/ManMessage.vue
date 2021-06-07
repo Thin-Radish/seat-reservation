@@ -6,9 +6,8 @@
     <scroll class="content" ref="scroll">
       <div class="top"></div>
       <div
-        v-for="(item, index) in messageAll"
+        v-for="(item, index) in messageList"
         :key="index"
-        @click="goInteract(item.shopTitle)"
       >
         <van-swipe-cell>
           <msg-card :message="item" />
@@ -31,6 +30,8 @@
 import Scroll from "components/common/scroll/Scroll";
 import NavBar from "components/common/navbar/NavBar";
 import MsgCard from "./childComps/msgcard/MsgCard";
+
+import { shopMessageList } from "api/message";
 export default {
   components: {
     Scroll,
@@ -39,107 +40,29 @@ export default {
   },
   data() {
     return {
-      messageAll: [
-        {
-          shopTitle: "爱吃饭的瘦萝卜",
-          shopImg: require("../../../assets/images/profile/avatar.svg"),
-          ctime: "5-5 19:30",
-        },
-        {
-          shopTitle: "不吃饭的胖萝卜",
-          shopImg: require("../../../assets/images/profile/宫崎骏人物 (1).svg"),
-          ctime: "5-4 21:20",
-        },
-        {
-          shopTitle: "不吃饭的胖萝卜",
-          shopImg: require("../../../assets/images/profile/二次元宠物-01.svg"),
-          ctime: "5-4 21:20",
-        },
-        {
-          shopTitle: "甜甜草莓酱",
-          shopImg: require("../../../assets/images/profile/二次元宠物-02.svg"),
-          ctime: "5-4 15:20",
-        },
-        {
-          shopTitle: "酸酸柠檬果",
-          shopImg: require("../../../assets/images/profile/二次元宠物-03.svg"),
-          ctime: "4-25 14:10",
-        },
-        {
-          shopTitle: "香香芒果干",
-          shopImg: require("../../../assets/images/profile/二次元宠物-04.svg"),
-          ctime: "4-20 12:10",
-        },
-        {
-          shopTitle: "妙妙波罗蜜",
-          shopImg: require("../../../assets/images/profile/二次元宠物-05.svg"),
-          ctime: "4-25 11:10",
-        },
-        {
-          shopTitle: "香香榴莲饼",
-          shopImg: require("../../../assets/images/profile/二次元宠物.svg"),
-          ctime: "4-20 10:20",
-        },
-        {
-          shopTitle: "冰冰西瓜汁",
-          shopImg: require("../../../assets/images/profile/宫崎骏 (1).svg"),
-          ctime: "4-24 9:10",
-        },
-        {
-          shopTitle: "爱吃饭的瘦萝卜",
-          shopImg: require("../../../assets/images/profile/宫崎骏 (2).svg"),
-          ctime: "4-11 11:20",
-        },
-        {
-          shopTitle: "爱吃饭的瘦萝卜",
-          shopImg: require("../../../assets/images/profile/宫崎骏 (3).svg"),
-          ctime: "4-5 8:20",
-        },
-        {
-          shopTitle: "爱吃饭的瘦萝卜",
-          shopImg: require("../../../assets/images/profile/avatar.svg"),
-          ctime: "4-1 13:20",
-        },
-        {
-          shopTitle: "爱吃饭的瘦萝卜",
-          shopImg: require("../../../assets/images/profile/avatar.svg"),
-          ctime: "3-20 15:20",
-        },
-        {
-         shopTitle: "爱吃饭的瘦萝卜",
-          shopImg: require("../../../assets/images/profile/avatar.svg"),
-          ctime: "3-15 11:20",
-        },
-        {
-          shopTitle: "爱吃饭的瘦萝卜",
-          shopImg: require("../../../assets/images/profile/avatar.svg"),
-          ctime: "3-12 14:30",
-        },
-        {
-          shopTitle: "爱吃饭的瘦萝卜",
-          shopImg: require("../../../assets/images/profile/avatar.svg"),
-          ctime: "3-10 12:10",
-        },
-        {
-          shopTitle: "爱吃饭的瘦萝卜",
-          shopImg: require("../../../assets/images/profile/avatar.svg"),
-          ctime: "3-5 19:10",
-        },
-        {
-          shopTitle: "爱吃饭的瘦萝卜",
-          shopImg: require("../../../assets/images/profile/avatar.svg"),
-          ctime: "3-2 20:10",
-        },
-      ],
+      messageList: [],
     };
   },
   methods: {
-    goInteract(value) {
-      this.$router.push({ name: "Interact", params: { title: value,isShowImg:false } });
+    getMessageList() {
+      let userId = this.$store.state.userId;
+      console.log(userId);
+      shopMessageList(userId)
+        .then((res) => {
+          console.log(res);
+          this.messageList = res.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
   activated() {
     this.$refs.scroll.refresh();
+  },
+  mounted() {
+    this.getMessageList();
+    console.log(this.$route.path);
   },
 };
 </script>

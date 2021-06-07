@@ -1,9 +1,5 @@
 <template>
   <div class="find">    
-    <!-- <input type="text" v-model="msg1"> -->
-    <!-- <button @click="sendMsg(msg1,1)">send1</button> -->
-    <!-- <input type="text" v-model="msg2">
-    <button @click="sendMsg(msg1,1)">send2</button> -->
     <van-search
       show-action
       label="店铺"
@@ -154,26 +150,32 @@ export default {
           
           shopImg: require("../../assets/images/shop/shop-img/记亦抄纸巷·油条包麻糍（地下商业街A区店）.jpg"),
           title: "Mr.记亦抄纸巷·油条包麻糍（地下商业街A区店）",
+          id:1,
         },
         {
           shopImg: require("../../assets/images/shop/shop-img/串客·来一手烧烤（福兴中路店子）.jpg"),
           title: "串客·来一手烧烤（福兴中路店子）",
+          id:2,
         },
         {
           shopImg: require("../../assets/images/shop/shop-img/奈哥酸菜鱼.jpg"),
           title: "奈哥酸菜鱼",
+          id:3,
         },
         {
           shopImg: require("../../assets/images/shop/shop-img/京满堂北京烤鸭.png"),
           title: "京满堂北京烤鸭",
+          id:4,
         },
         {
           shopImg: require("../../assets/images/shop/shop-img/湘江小杜.jpg"),
           title: "湘江小杜",
+          id:5,
         },
         {
           shopImg: require("../../assets/images/shop/shop-img/华掌勺·蒸菜·小碗菜（熙春路店）.jpg"),
           title: "华掌勺·蒸菜·小碗菜（熙春路店）",
+          id:6,
         },
       ],
       shopList:[],
@@ -243,22 +245,6 @@ export default {
         this.getShopInfo(this.shops)
       }
     },
-    sendMsg(message,getter){
-
-      var sendMessage ={
-        message:message,
-        getter:getter,
-        sender:this.$store.state.userId,
-        type: 'message',                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
-      }
-
-      sendMessage = JSON.stringify(sendMessage);
-
-      console.log('============================================');
-
-      this.$store.state.stomp.send("/app/message/talk", {}, sendMessage);
-    },
-
 
     /**
      * 网络请求相关

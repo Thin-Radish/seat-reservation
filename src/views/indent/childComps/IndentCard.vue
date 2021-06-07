@@ -1,5 +1,5 @@
 <template>
-  <div class="contain" @click="goto('/indentinfo')">
+  <div class="contain" @click="goIndentInfo()">
     <div class="card-head">
       <div class="shop-title">{{indent.shopName}}</div>
       <div class="state">{{state}}</div>
@@ -60,9 +60,14 @@ import formatDate from "common/utils/formatDate"
       }
     },
     methods:{
-      goto(path) {
-      this.$router.push(path);
-    },
+      goIndentInfo() {
+        this.$router.push({
+          path: '/indentinfo',
+            query: {
+              id: this.indent.id
+            }
+        });
+      },
     }
 
   }

@@ -47,6 +47,17 @@ export function getUserInfo(userId){
 }
 
 
+export function getAvatar(avatarFile){
+  return request({
+    method: 'post',
+    url:'/user/setAvatar',
+    data:qs.stringify({
+      file:avatarFile
+    })
+  })
+}
+
+
 
 
 

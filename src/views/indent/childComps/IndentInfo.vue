@@ -134,6 +134,21 @@ export default {
     },
   },
   methods: {
+
+    getIndentById_(){
+      let indentId = this.$route.query.id;
+      getIndentById(indentId)
+      .then((res) => {
+        console.log(res);
+        this.indentInfo = res.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+      
+    },
+
+
     goback() {
       this.$router.go(-1);
     },
@@ -166,15 +181,8 @@ export default {
       });
     },
   },
-  created() {
-    getIndentById(3)
-      .then((res) => {
-        console.log(res);
-        this.indentInfo = res.data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  mounted() {
+    this.getIndentById_();
   },
 };
 </script>

@@ -61,7 +61,7 @@
         />
       
         </van-popup>
-        <van-cell title="我的头像" is-link value="修改"/>
+        <van-cell title="我的头像" is-link to="/modavatar" value="修改"/>
         <van-cell title="修改密码" is-link to="/modpwd" value="修改"/>
         
         <div></div>

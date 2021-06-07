@@ -1,10 +1,10 @@
 <template>
   <div class="card">
     <div class="card-head" v-if="message.ctime">{{message.ctime}}</div>
-    <div class="context">
-      <div class="left-icon"><img :src="message.icon"  v-if="message.ident ==='shop'"></div>
+    <div class="context"> 
+      <div class="left-icon"><img :src="message.icon"  v-if="message.ident ==='other'"></div>
       <div class="center-text">{{message.text}}</div>
-      <div class="right-icon"><img :src="message.icon" v-if="message.ident ==='user'"></div>
+      <div class="right-icon"><img :src="message.icon" v-if="message.ident ==='host'"></div>
     </div>
   </div>
 </template>
@@ -23,6 +23,7 @@
   width: 100%;
   box-sizing: border-box;
   padding: 10px;
+  min-height: 70px;
 }
 .card-head{
   height: 40px;
@@ -61,5 +62,7 @@
   padding: 8px;
   border-radius: 5px;
   font-size: 14px;
+  /* 解决连续英文不换行 */
+  word-break: break-all; 
 }
 </style>

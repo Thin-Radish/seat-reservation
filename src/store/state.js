@@ -3,9 +3,10 @@ const state = {
   foodList:[],
   seatList:[],
   index:0,
-  role:0,
+  userRole:0,
   userId:null,
   sellerInfo:{},
+  routes:[],
 
   ws: null,
   //推送消息

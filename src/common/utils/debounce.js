@@ -17,6 +17,4 @@ export default function debounce(func, wait=200) {
       func.apply(that, args)
     }, wait);
   }
-
-
 }

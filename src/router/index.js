@@ -12,22 +12,37 @@ const router = new VueRouter({
   mode: "history"
 })
 
-router.addRoutes(publicRoute);
+publicRoute.forEach(item => {
+  router.addRoute(item);
+});
+userRoute.forEach(item => {
+  router.addRoute(item);
+});
+shopRoute.forEach(item => {
+  router.addRoute(item);
+});
+// router.addRoute(publicRoute);
 // router.addRoutes(userRoute);
 // router.addRoutes(shopRoute);
 
 
 // router.beforeEach((to,from,next)=>{
 //   let role = store.state.role;
-//   let locRole = parseInt(sessionStorage.getItem("role"))
 
-//   if(to.meta.role.includes(locRole)||to.meta.role.includes(role) ){
+//   // let locRole = parseInt(sessionStorage.getItem("role"))
+
+//   if(to.meta.role.includes(role) ){
 //     next();
 //   }
 //   else{
 //     router.replace('/login')
 //   }
+
+  
 // })
+
+
+
 
 
 export default router;

@@ -85,6 +85,7 @@ import Scroll from "components/common/scroll/Scroll";
 import Split from "components/content/split/Split";
 import BScroll from "better-scroll";
 
+
 export default {
   name: "Shop",
   components: {
@@ -113,6 +114,9 @@ export default {
     },
   },
   created() {
+    // 连接即时通讯
+    this.$store.commit('initWebsocket');
+
     this.$nextTick(() => {
       let imgW = this.$refs.picsItem[0].clientWidth;
       let marginR = 11;

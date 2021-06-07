@@ -7,7 +7,7 @@
       <van-tabbar-item icon="manager-o" to="profile" name="/profile">我的</van-tabbar-item>
     </van-tabbar>
 
-    <keep-alive >
+    <keep-alive exclude="Message">
       <!-- 二级路由 -->
       <router-view/>
     </keep-alive>
@@ -25,7 +25,7 @@ export default {
   },
   computed:{
     isRecMsg(){
-      return this.$store.state.recMsg === {};
+      return this.$store.state.recMsg != {};
     }
   },
 

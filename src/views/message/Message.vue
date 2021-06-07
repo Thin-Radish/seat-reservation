@@ -33,6 +33,7 @@ import MsgCard from "./childComps/MsgCard";
 
 import { getMessageList } from "api/message";
 export default {
+  name:"Message",
   components: {
     Scroll,
     NavBar,
@@ -44,7 +45,7 @@ export default {
     };
   },
   methods: {
-    getMessageList() {
+    getMessageList_() {
       let userId = this.$store.state.userId;
       getMessageList(userId)
         .then((res) => {
@@ -54,14 +55,17 @@ export default {
         .catch((err) => {
           console.log(err);
         });
+      this.$nextTick(() => {
+        this.$refs.scroll.refresh();
+      })
     },
+    
   },
   activated() {
     this.$refs.scroll.refresh();
   },
   mounted() {
-    this.getMessageList();
-    console.log(this.$route.path);
+    this.getMessageList_();
   },
 };
 </script>

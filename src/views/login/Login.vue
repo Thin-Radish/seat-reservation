@@ -60,7 +60,6 @@ export default {
 
       userLogin(values).then(res=>{
         if(res.code === 200){
-          // console.log(res);
           this.asyncRoute(res.data);
           Toast.success(res.message);
         }else{
@@ -74,16 +73,19 @@ export default {
     //设置动态路由
     asyncRoute(info){
       if(info.role === 1){
-        this.$router.addRoutes(userRoute);
-        this.$store.commit('commitUserId',info.id);
+        // userRoute.forEach(item => {
+        //   this.$router.addRoute(item);
+        // });
         this.$router.replace("/index");
       }else if(info.role === 2){
-        this.$router.addRoutes(shopRoute);
+        // shopRoute.forEach(item => {
+        //   this.$router.addRoute(item);
+        // });
         this.$router.replace("/merchant");
-        this.$store.commit('commitUserId',info.shopId);
         
       }
-      // this.$store.commit('commitRole',1);
+      this.$store.commit('commitUserId',info.id);
+      this.$store.commit('commitRole',info.role);
     },
 
     validateUsername(val) {

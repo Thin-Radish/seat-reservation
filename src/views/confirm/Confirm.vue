@@ -202,6 +202,7 @@ export default {
         userId: this.$store.state.userId,  //这里要在vux中拿到
         shopId:this.$route.query.id,
         arriveTime:this.time,
+        levWords:this.text,
         orderDish:this.indentDish,
         seats:this.indentSeat,
         price:this.totalMoney,

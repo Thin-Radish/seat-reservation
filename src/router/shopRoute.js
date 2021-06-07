@@ -4,6 +4,7 @@ const ManMenu = () => import('views/merchant/manMenu/ManMenu')
 const ManMessage = () => import('views/merchant/manMessage/ManMessage')
 const ManIndent = () => import('views/merchant/manIndent/ManIndent')
 const ManShop = () => import('views/merchant/manShop/ManShop')
+const ManInteract = () => import('views/merchant/manMessage/childComps/interact/Interact')
 
 const AddFood = () => import('views/merchant/manMenu/childComps/AddFood')
 const IndentInfo = () => import('views/indent/childComps/IndentInfo')
@@ -22,7 +23,7 @@ const shopRoute = [
       {
         // 重定向
         path: "",
-        redirect: "menu",
+        redirect: "shop",
         meta: {
           role: [2],
         }
@@ -93,7 +94,15 @@ const shopRoute = [
     meta: {
       role: [2],
     }
-  }
+  },
+  {
+    path: "/maninteract",
+    component: ManInteract,
+    name: "ManInteract",
+    meta: {
+      role: [2],
+    }
+  },
 
 
 ]

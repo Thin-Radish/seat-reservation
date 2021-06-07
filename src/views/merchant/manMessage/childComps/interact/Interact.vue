@@ -5,7 +5,7 @@
         <img src="~assets/images/nav-bar/return-black.svg" alt="" />
       </div>
       <div slot="center">{{ title }}</div>
-      <div slot="right">
+      <div slot="right" v-if="isShowImg">
         <img
           src="~assets/images/nav-bar/shop-icon.svg"
           class="shop-icon"
@@ -14,13 +14,14 @@
       </div>
     </nav-bar>
 
-    <scroll class="msg-content">
+    <scroll class="msg-content" :probeType="3" ref="scroll">
       <div v-for="(item, index) in msgAll" :key="index">
         <inter-card :message="item" />
       </div>
+      <div class="botton"></div>
     </scroll>
 
-    <van-field  
+    <van-field
       class="text"
       v-model="message"
       rows="1"
@@ -39,6 +40,8 @@
 import Scroll from "components/common/scroll/Scroll";
 import NavBar from "components/common/navbar/NavBar";
 import InterCard from "./childComps/InterCard";
+
+import { getChatRecord } from "api/message";
 export default {
   name: "Interact",
   components: {
@@ -49,27 +52,36 @@ export default {
   data() {
     return {
       clientHeight: null,
+      isShowImg: true,
       title: "",
       message: "",
-      msgAll: [
-        {
-          ctime: "17:18",
-          ident: "shop",
-          icon: require("../../assets/images/shop/shop-img/肖友记卤粉.jpg"),
-          text: "您好，欢迎光临，有什么可以帮助到你的吗？",
-        },
-        {
-          ident: "user",
-          icon: require("../../assets/images/profile/avatar.svg"),
-          text: "您好，我的卤粉不需要香菜，需要多加些汤，并且微辣，麻烦了",
-        },
-        {
-          ident: "shop",
-          icon: require("../../assets/images/shop/shop-img/肖友记卤粉.jpg"),
-          text: "好的呢，这就为您准备",
-        },
-      ],
+      msgAll: [],
     };
+  },
+  watch:{
+    "$store.state.recMsg":{
+      deep:true,
+      handler: function (newValue, oldValue){
+
+        let getter = this.$store.state.userId;  //4
+        // let sender = this.$route.params.shopId; 
+        if(newValue.sender ===1 && newValue.getter === getter){
+          let msgItem ={
+            ident: "other",
+            icon:this.$route.params.shopAvatar,
+            text:newValue.message
+          }
+          this.msgAll.push(msgItem);
+          this.$nextTick(() => {
+          this.$refs.scroll.refresh();
+          this.$refs.scroll.toBottom();
+      })
+        }
+      }
+    }
+  },
+  computed:{
+    
   },
   methods: {
     goto(path) {
@@ -79,32 +91,92 @@ export default {
       this.$router.go(-1);
     },
     getTitle() {
-      this.title = this.$route.params.title;
+      this.title = this.$route.params.message.userName;
+      this.isShowImg = this.$route.params.isShowImg;
       if (this.title === undefined) {
         this.title = "聊天窗口";
       }
     },
+    filterMsgData(data){
+      for(let i= data.length-1; i>=0; i--){
+        let userId = this.$store.state.userId; 
+        if(data[i].getter === userId){
+          var ident = "other";
+          var icon = this.$route.params.message.userAvatar;
+        }
+        else{
+          var ident = "host";
+          var icon = this.$route.params.message.shopAvatar;
+          
+        }
+        let msgItem ={
+          ident:ident,
+          icon:icon,
+          text:data[i].message
+        }
+        this.msgAll.push(msgItem);
+      }
+      this.$nextTick(() => {
+        this.$refs.scroll.refresh();
+        this.$refs.scroll.toBottom();
+      })
+    },
+    sendMsg(message,getter){
+
+      var sendMessage ={
+        message:message,
+        getter:getter,
+        sender:this.$store.state.userId,
+        type: 'message',                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+      }
+
+      sendMessage = JSON.stringify(sendMessage);
+      this.$store.state.stomp.send("/app/message/talk", {}, sendMessage);
+    },
     send() {
       let msg = {
-        ident: "user",
-        icon: require("../../assets/images/profile/avatar.svg"),
+        ident: "host",
+        icon: this.$route.params.message.shopAvatar,
         text: this.message,
       };
       this.msgAll.push(msg);
+      // this.message = "";
 
-      this.message = "";
+      this.$nextTick(() => {
+        this.$refs.scroll.refresh();
+        this.$refs.scroll.toBottom();
+      })
+      let getter = this.$route.params.message.userId;
+
+      this.sendMsg(this.message,getter);
+    },
+
+    getChatRecord_() {
+      let getter = this.$store.state.userId;
+      let sender = this.$route.params.message.userId;
+      getChatRecord(getter, sender)
+        .then((res) => {
+          console.log(res);
+          this.filterMsgData(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
 
   created() {
     this.getTitle();
   },
+  mounted() {
+    this.getChatRecord_();
+  },
 };
 </script>
 
 <style scoped>
 .interact {
-  height: 100vh;
+  /* height: 100vh; */
   background: #f2f2f2;
 }
 /* .shop-icon{
@@ -124,8 +196,6 @@ export default {
   padding: 5px;
 }
 
-
-
 .msg-content {
   overflow: hidden;
   background: #f2f2f2;
@@ -134,5 +204,10 @@ export default {
   right: 0;
   top: 46px;
   bottom: 50px;
+}
+
+.botton {
+  width: 100%;
+  height: 20px;
 }
 </style>

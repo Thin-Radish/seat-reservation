@@ -11,7 +11,7 @@ const mutations = {
     state.seatList = paylod;
   },
   commitRole(state, paylod) {
-    state.role = paylod;
+    state.userRole = paylod;
   },
   commitUserId(state, paylod) {
     state.userId = paylod;
@@ -47,7 +47,7 @@ const mutations = {
           console.log(msgObj);
           // console.log(msgObj.message);
           state.recMsg = msgObj;
-        });
+        });    
 
       },
 

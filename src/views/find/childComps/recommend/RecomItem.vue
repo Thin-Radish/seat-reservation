@@ -1,24 +1,33 @@
 <template>
-  <div class="item">
-    <div class="icon"><img :src="recomData.shopImg" alt=""></div>
-    <div class="title"><span>{{recomData.title}}</span></div>
+  <div class="item" @click="gotoShop()">
+    <div class="icon"><img :src="recomData.shopImg" /></div>
+    <div class="title"><span>{{ recomData.title }}</span></div>
   </div>
 </template>
 
 <script>
-  export default {
-    props:{
-      recomData:{
-        type:Object,
-        default:null,
-      }
+export default {
+  props: {
+    recomData: {
+      type: Object,
+      default: null,
     },
-  }
+  },
+  methods: {
+    gotoShop() {
+      this.$router.push({
+        path: "/shop",
+        query: {
+          id: this.recomData.id,
+        },
+      });
+    },
+  },
+};
 </script>
 
 <style scoped>
-
-.item{
+.item {
   width: 46%;
   height: 100px;
   float: left;
@@ -26,26 +35,22 @@
   margin-top: 10px;
 }
 
-.icon{
+.icon {
   width: 100%;
   height: 80px;
- 
 }
-.icon img{
+.icon img {
   width: 100%;
   height: 80px;
-   border-radius: 4px;
+  border-radius: 4px;
 }
-.title{
+.title {
   width: 100%;
   height: 20px;
   overflow: hidden;
-  text-overflow:ellipsis;
+  text-overflow: ellipsis;
   white-space: nowrap;
 
   font-size: 14px;
 }
-
-
-
 </style>

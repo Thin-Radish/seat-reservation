@@ -55,24 +55,7 @@ export default {
       isShowImg: true,
       title: "",
       message: "",
-      msgAll: [
-        // {
-        //   ctime: "17:18",
-        //   ident: "other",
-        //   icon: require("../../assets/images/shop/shop-img/肖友记卤粉.jpg"),
-        //   text: "您好，欢迎光临，有什么可以帮助到你的吗？",
-        // },
-        // {
-        //   ident: "host",
-        //   icon: require("../../assets/images/profile/avatar.svg"),
-        //   text: "您好，我的卤粉不需要香菜，需要多加些汤，并且微辣，麻烦了",
-        // },
-        // {
-        //   ident: "other",
-        //   icon: require("../../assets/images/shop/shop-img/肖友记卤粉.jpg"),
-        //   text: "好的呢，这就为您准备",
-        // },
-      ],
+      msgAll: [],
     };
   },
   watch:{
@@ -85,7 +68,7 @@ export default {
         if(newValue.sender ===1 && newValue.getter === getter){
           let msgItem ={
             ident: "other",
-            icon:this.$route.params.shopAvatar,
+            icon:this.$route.params.message.shopAvatar,
             text:newValue.message
           }
           this.msgAll.push(msgItem);
@@ -98,7 +81,18 @@ export default {
     }
   },
   computed:{
-    
+    shopAvatar(){
+      return this.$route.params.message.shopAvatar;
+    },
+    userAvatar(){
+      return this.$route.params.message.userAvatar;
+    },
+    userId(){
+      return this.$store.state.userId;
+    },
+    shopUserId(){
+      return this.$route.params.message.shopUserId;
+    }
   },
   methods: {
     goto(path) {
@@ -108,7 +102,7 @@ export default {
       this.$router.go(-1);
     },
     getTitle() {
-      this.title = this.$route.params.title;
+      this.title = this.$route.params.message.title;
       this.isShowImg = this.$route.params.isShowImg;
       if (this.title === undefined) {
         this.title = "聊天窗口";
@@ -116,15 +110,13 @@ export default {
     },
     filterMsgData(data){
       for(let i= data.length-1; i>=0; i--){
-         let getter = this.$store.state.userId; 
-        // let ident = (item.getter === getter)? "host":"other";
-        if(data[i].getter === getter){
+        if(data[i].getter === this.userId){
           var ident = "other";
-          var icon = this.$route.params.shopAvatar;
+          var icon = this.shopAvatar;
         }
         else{
           var ident = "host";
-          var icon = require("../../assets/images/profile/avatar.svg");
+          var icon = this.userAvatar;
 
         }
         let msgItem ={
@@ -139,12 +131,12 @@ export default {
         this.$refs.scroll.toBottom();
       })
     },
-    sendMsg(message,getter){
+    sendMsg(message){
 
       var sendMessage ={
         message:message,
-        getter:getter,
-        sender:this.$store.state.userId,
+        getter:this.shopUserId,
+        sender:this.userId,
         type: 'message',                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
       }
 
@@ -154,7 +146,7 @@ export default {
     send() {
       let msg = {
         ident: "host",
-        icon: require("../../assets/images/profile/avatar.svg"),
+        icon: this.userAvatar,
         text: this.message,
       };
       this.msgAll.push(msg);
@@ -164,15 +156,13 @@ export default {
         this.$refs.scroll.refresh();
         this.$refs.scroll.toBottom();
       })
-      let getter = this.$route.params.shopUserId;
-
-      this.sendMsg(this.message,getter);
+      this.sendMsg(this.message);
     },
 
     getChatRecord_() {
-      let getter = this.$store.state.userId;
-      let sender = this.$route.params.shopUserId;
-      getChatRecord(getter, shopUserId)
+      let getter = this.userId;
+      let sender = this.shopUserId;
+      getChatRecord(getter, sender)
         .then((res) => {
           console.log(res);
           this.filterMsgData(res.data);

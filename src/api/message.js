@@ -11,6 +11,17 @@ export function getMessageList(userId){
   })
 }
 
+
+export function shopMessageList(shopId){
+  return request({
+    method: 'get',
+    url: '/message/getListByShopId',
+    params: {
+      id:shopId
+    }
+  })
+}
+
 export function getChatRecord(getter,sender){
   return request({
     method: 'get',
@@ -22,4 +33,6 @@ export function getChatRecord(getter,sender){
     }
   })
 }
+
+
 

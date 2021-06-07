@@ -1,6 +1,7 @@
 const Index = () => import('views/Index')
 const Find = () => import('views/find/Find')
 
+const Message = () => import('views/message/Message')
 const Indent = () => import('views/indent/Indent')
 const Profile = () => import('views/profile/Profile')
 const Shop = () => import('views/shop/Shop')
@@ -18,10 +19,13 @@ const ModHabit = () => import('views/modify/ModHabit')
 const ModName = () => import('views/modify/ModName')
 const ModPassword = () => import('views/modify/ModPassword')
 const ModTel = () => import('views/modify/ModTel')
+const ModAvatar = () => import('views/modify/ModAvatar')
 
 
 const Collect = () => import('views/collect/Collect')
 const Footprint = () => import('views/footprint/Footprint')
+
+const Interact = () => import('views/interact/Interact')
 
 
 const userRoute = [
@@ -43,6 +47,13 @@ const userRoute = [
         component: Find,
         meta: {
           role: [1],
+        }
+      },
+      {
+        path: "/message",
+        component: Message,
+        meta: {
+          role: [0],
         }
       },
       
@@ -147,6 +158,13 @@ const userRoute = [
       role: [1],
     }
   },
+  {
+    path: "/modavatar",
+    component: ModAvatar,
+    meta: {
+      role: [1],
+    }
+  },
 
   {
     path: "/collect",
@@ -165,6 +183,16 @@ const userRoute = [
       role: [1],
     }
   },
+  {
+    path: "/interact",
+    component: Interact,
+    name: "Interact",
+    meta: {
+      role: [1],
+    }
+  },
+
+
 
 ];
 

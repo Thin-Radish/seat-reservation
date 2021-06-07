@@ -1,7 +1,7 @@
 <template>
   <div
     class="contain"
-    @click="goInteract(message.title, message.shopUserId, message.shopAvatar)"
+    @click="goInteract()"
   >
     <div class="card-head">
       <div class="dot" v-if="isRead"></div>
@@ -39,7 +39,7 @@ export default {
     goInteract(title, shopUserId, shopAvatar) {
       this.$router.push({
         name: "Interact",
-        params: { title, shopUserId, shopAvatar, isShowImg: true },
+        params: { message:this.message, isShowImg: true },
       });
     },
   },
